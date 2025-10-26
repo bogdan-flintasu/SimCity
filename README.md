@@ -1,30 +1,26 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# 🏙️ SimCity: Simulator de impact urban
 
-### Folosiți template-ul corespunzător grupei voastre!
+Acest proiect reprezintă un **Simulator de Impact Urban**. Aplicația modelează structura fundamentală a unui oraș și funcționează ca un instrument de analiză pentru deciziile de dezvoltare și planificare urbană.
 
-| Laborant  | Link template                                |
-|-----------|----------------------------------------------|
-| Dragoș B  | https://github.com/Ionnier/oop-template      |
-| Tiberiu M | https://github.com/MaximTiberiu/oop-template |
-| Marius MC | https://github.com/mcmarius/oop-template     |
+### Care este scopul proiectului?
 
-### Important!
+Simulatorul oferă un cadru logic pentru evaluarea consecințelor pe termen scurt și mediu ale marilor propuneri de proiecte (precum construcția unei parcări, a unui nou cartier sau a unei școli).
 
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar dacă documentați riguros acest proces.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
+Utilizatorii pot introduce un proiect de dezvoltare pentru a obține o **previziune a impactului** acestuia asupra metricilor cheie ale orașului, fără a risca resurse reale.
 
-Codul din proiect trebuie să poată fi ușor de înțeles și de modificat de către altcineva. Pentru detalii, veniți la ore.
+### Funcționalități cheie
 
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
+Aplicația se concentrează pe trei aspecte principale ale simulării:
 
-- **Fără cod de umplutură/fără sens!**
-- **Fără copy-paste!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
-- **Pentru T2 și T3, fără date în cod!** Datele vor fi citite din fișier, aveți exemple destule.
-- **Obligatoriu** fișiere cu date mai multe din care să citiți, obligatoriu cu biblioteci externe: fișiere (local sau server) sau baze de date
-- obligatoriu (TBD) să integrați cel puțin două biblioteci externe pe lângă cele pentru stocare
+1.  **Evaluarea proiectului:** Analizează costul inițial și beneficiile sociale/financiare estimate ale unei propuneri, calculând un scor de fezabilitate.
+2.  **Simularea evoluției:** Rulează evoluția orașului lunar, actualizând automat **bugetul** (pe baza veniturilor și cheltuielilor de întreținere), **indicele de fericire** al cetățenilor, cât și **gradul de poluare**.
+3.  **Implementarea deciziei:** Permite utilizatorului să "pună în aplicare" un proiect aprobat, scăzând costul din buget și **modificând permanent structura internă a orașului** (adăugând clădiri noi și ajustând starea generală).
+
+### Modelarea planului urban
+
+Planul orașului este vizualizat grafic. El este reprezentat intern prin mai multe structuri: un oraș conține mai multe **Zone** (rezidențiale, comerciale, etc.), fiecare zonă fiind compusă dintr-o colecție de **Clădiri**. Un model de oraș inițial este pre-configurat pentru testare și interacțiune imediată.
+
+---
 
 ### Tema 0
 
