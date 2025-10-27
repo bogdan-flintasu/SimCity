@@ -3,7 +3,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <string>
 
 class Strada {
 private:
@@ -561,8 +560,7 @@ public:
     [[nodiscard]] bool implementare_proiect_rezidential(const Proiect& p, const CladireRezidentiala& cr, const std::string& nume_zona_proiect);
     [[nodiscard]] bool implementare_proiect_public(const Proiect& p, const CladirePublica& cp, const std::string& nume_zona_proiect);
 
-    [[nodiscard]] bool demoleaza_structura(int id_structura_de_sters, double procent_recuperare = 0.25);
-    [[nodiscard]] bool imbunatateste_structura(int id_structura, double reducere_cost_intretinere, double cost_imbunatatire);
+
 
     void simulare_luna();
 
