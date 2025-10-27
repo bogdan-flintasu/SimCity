@@ -51,8 +51,7 @@ Strada::Strada(int id, std::string  nume_, int cost_c, int cost_i, bool trot, bo
     std::cout << "Constructor initializare strada apelat\n";
 }
 
-Strada::Strada(const Strada& other): ID(other.ID), nume(other.nume), cost_construire(other.cost_construire),
-                                    cost_intretinere(other.cost_intretinere), trotuar(other.trotuar), sens_unic(other.sens_unic), numar_benzi(other.numar_benzi), lungime(other.lungime) {}
+Strada::Strada(const Strada& other) = default;
 
 
 Strada::~Strada() {
@@ -143,9 +142,7 @@ CladireRezidentiala::CladireRezidentiala(int id, std::string nume_, int cost_c, 
                                                                                                                                                     cost_intretinere(cost_i), tip(tip_), suprafata_utila(suprafata),
                                                                                                                                                     numar_etaje(etaje), numar_locuitori(locatari){}
 
-CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other): ID(other.ID), nume(other.nume), cost_construire(other.cost_construire),
-                                                                        cost_intretinere(other.cost_intretinere), tip(other.tip),
-                                                                        suprafata_utila(other.suprafata_utila), numar_etaje(other.numar_etaje), numar_locuitori(other.numar_locuitori) {}
+CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other) = default;
 
 CladireRezidentiala& CladireRezidentiala:: operator=(const CladireRezidentiala& other) {
     if (this != &other) {
@@ -247,9 +244,7 @@ public:
 CladirePublica::CladirePublica(int id, std::string  n, int cost_c, int cost_i, CladiriPublice tip_, int capacitate, bool inchiriat_): ID(id), nume(std::move(n)), cost_construire(cost_c), cost_intretinere(cost_i),
                                                                                                                 tip(tip_), capacitate_servicii(capacitate), inchiriat(inchiriat_) {}
 
-CladirePublica::CladirePublica(const CladirePublica &other): ID(other.ID), nume(other.nume), cost_construire(other.cost_construire),
-                                                                        cost_intretinere(other.cost_intretinere), tip(other.tip),
-                                                                        capacitate_servicii(other.capacitate_servicii), inchiriat(other.inchiriat) {}
+CladirePublica::CladirePublica(const CladirePublica &other) = default;
 
 CladirePublica& CladirePublica:: operator=(const CladirePublica& other) {
     if (this != &other) {
@@ -340,7 +335,7 @@ public:
 
 Proiect::Proiect(std::string  nume, Proiecte tip_, Amanunte det, int cost): nume_proiect(std::move(nume)), tip(tip_), detalii(det), cost_estimat(cost) {}
 
-Proiect::Proiect(const Proiect &other): nume_proiect(other.nume_proiect), tip(other.tip), detalii(other.detalii), cost_estimat(other.cost_estimat) {}
+Proiect::Proiect(const Proiect &other) = default;
 
 Proiect& Proiect::operator=(const Proiect &other) {
     if (this != &other) {
@@ -405,7 +400,7 @@ public:
 
 Zona::Zona(std::string  nume) : nume_zona(std::move(nume)) {}
 
-Zona::Zona(const Zona& other): nume_zona(other.nume_zona), strazi(other.strazi), cladiri_rezidentiale(other.cladiri_rezidentiale), cladiri_publice(other.cladiri_publice) {}
+Zona::Zona(const Zona& other) = default;
 
 Zona& Zona::operator=(const Zona& other) {
     if (this != &other) {
@@ -590,9 +585,7 @@ const Zona* Oras::cautare_zona(const std::string& nume) const{
 
 Oras::Oras(std::string nume, double buget, double fericire_init): nume_oras(std::move(nume)), buget_curent(buget), indice_fericire(fericire_init) {}
 
-Oras::Oras(const Oras& other)
-    : nume_oras(other.nume_oras), buget_curent(other.buget_curent),
-      indice_fericire(other.indice_fericire), zone(other.zone) {}
+Oras::Oras(const Oras& other) = default;
 
 Oras& Oras::operator=(const Oras& other) {
     if (this != &other) {
@@ -637,6 +630,44 @@ int Oras::calcul_numar_total_masini() const {
 double Oras::get_buget() const { return buget_curent; }
 double Oras::get_fericire() const { return indice_fericire; }
 
+double calcul_fericire(CladiriPublice tip, Amanunte actiune) {
+    if (actiune == Amanunte::DE_LA_ZERO) {
+        if (tip == CladiriPublice::FABRICA) return -0.03;
+        if (tip == CladiriPublice::BISERICA) return 0.04;
+        if (tip == CladiriPublice::SPATIU_COMERCIAL) return 0.08;
+        if (tip == CladiriPublice::PARC) return 0.05;
+        if (tip == CladiriPublice::SPITAL) return 0.07;
+        if (tip == CladiriPublice::CLADIRE_BIROURI) return 0.02;
+        if (tip == CladiriPublice::POMPIERI) return 0.03;
+        if (tip == CladiriPublice::POLITIE) return 0.02;
+        if (tip == CladiriPublice::SCOALA) return 0.02;
+        if (tip == CladiriPublice::UNIVERSITATE) return 0.04;
+    } else if (actiune == Amanunte::IMBUNATATIRE) {
+        if (tip == CladiriPublice::FABRICA) return 0.02;
+        if (tip == CladiriPublice::BISERICA) return 0.03;
+        if (tip == CladiriPublice::SPATIU_COMERCIAL) return 0.05;
+        if (tip == CladiriPublice::PARC) return 0.02;
+        if (tip == CladiriPublice::SPITAL) return 0.06;
+        if (tip == CladiriPublice::CLADIRE_BIROURI) return 0.01;
+        if (tip == CladiriPublice::POMPIERI) return 0.03;
+        if (tip == CladiriPublice::POLITIE) return 0.02;
+        if (tip == CladiriPublice::SCOALA) return 0.02;
+        if (tip == CladiriPublice::UNIVERSITATE) return 0.03;
+    } else if (actiune == Amanunte::DEMOLARE) {
+        if (tip == CladiriPublice::FABRICA) return 0.04;
+        if (tip == CladiriPublice::BISERICA) return -0.07;
+        if (tip == CladiriPublice::SPATIU_COMERCIAL) return -0.1;
+        if (tip == CladiriPublice::PARC) return -0.07;
+        if (tip == CladiriPublice::SPITAL) return -0.08;
+        if (tip == CladiriPublice::CLADIRE_BIROURI) return -0.04;
+        if (tip == CladiriPublice::POMPIERI) return -0.02;
+        if (tip == CladiriPublice::POLITIE) return -0.01;
+        if (tip == CladiriPublice::SCOALA) return -0.04;
+        if (tip == CladiriPublice::UNIVERSITATE) return -0.05;
+    }
+    return 0.0;
+}
+
 [[nodiscard]] bool Oras::implementare_proiect_stradal(const Proiect& p, const Strada& s, const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::STRADA) return false;
     if (buget_curent < p.get_cost_estimat()) return false;
@@ -675,74 +706,17 @@ double Oras::get_fericire() const { return indice_fericire; }
     if (buget_curent < p.get_cost_estimat()) return false;
     Zona* zona_tinta = cautare_zona(nume_zona_proiect);
     if (zona_tinta == nullptr) return false;
+
+    Amanunte detalii = p.get_detalii();
+
     buget_curent -= p.get_cost_estimat();
     zona_tinta->adauga_cladire_publica(cp);
-    if (p.get_detalii() == Amanunte::DEMOLARE) {
-        if (cp.get_tip() == CladiriPublice::FABRICA)
-            indice_fericire = std::min(0.0, indice_fericire + 0.04);
-        else if (cp.get_tip() == CladiriPublice::BISERICA)
-            indice_fericire = std::max(1.0, indice_fericire - 0.07);
-        else if (cp.get_tip() == CladiriPublice::SPATIU_COMERCIAL)
-            indice_fericire = std::max(1.0, indice_fericire - 0.1);
-        else if (cp.get_tip() == CladiriPublice::PARC)
-            indice_fericire = std::max(1.0, indice_fericire - 0.07);
-        else if (cp.get_tip() == CladiriPublice::SPITAL)
-            indice_fericire = std::max(1.0, indice_fericire - 0.08);
-        else if (cp.get_tip() == CladiriPublice::CLADIRE_BIROURI)
-            indice_fericire = std::max(1.0, indice_fericire - 0.04);
-        else if (cp.get_tip() == CladiriPublice::POMPIERI)
-            indice_fericire = std::max(1.0, indice_fericire - 0.02);
-        else if (cp.get_tip() == CladiriPublice::POLITIE)
-            indice_fericire = std::max(1.0, indice_fericire - 0.01);
-        else if (cp.get_tip() == CladiriPublice::SCOALA)
-            indice_fericire = std::max(1.0, indice_fericire - 0.04);
-        else if (cp.get_tip() == CladiriPublice::UNIVERSITATE)
-            indice_fericire = std::max(1.0, indice_fericire - 0.05);
-    }
-    else if (p.get_detalii() == Amanunte::IMBUNATATIRE) {
-        if (cp.get_tip() == CladiriPublice::FABRICA)
-            indice_fericire = std::min(0.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::BISERICA)
-            indice_fericire = std::min(1.0, indice_fericire + 0.03);
-        else if (cp.get_tip() == CladiriPublice::SPATIU_COMERCIAL)
-            indice_fericire = std::min(1.0, indice_fericire + 0.05);
-        else if (cp.get_tip() == CladiriPublice::PARC)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::SPITAL)
-            indice_fericire = std::min(1.0, indice_fericire + 0.06);
-        else if (cp.get_tip() == CladiriPublice::CLADIRE_BIROURI)
-            indice_fericire = std::min(1.0, indice_fericire + 0.01);
-        else if (cp.get_tip() == CladiriPublice::POMPIERI)
-            indice_fericire = std::min(1.0, indice_fericire + 0.03);
-        else if (cp.get_tip() == CladiriPublice::POLITIE)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::SCOALA)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::UNIVERSITATE)
-            indice_fericire = std::min(1.0, indice_fericire + 0.03);
-    }
-    else if (p.get_detalii() == Amanunte::DE_LA_ZERO) {
-        if (cp.get_tip() == CladiriPublice::FABRICA)
-            indice_fericire = std::max(0.0, indice_fericire - 0.03);
-        else if (cp.get_tip() == CladiriPublice::BISERICA)
-            indice_fericire = std::min(1.0, indice_fericire + 0.04);
-        else if (cp.get_tip() == CladiriPublice::SPATIU_COMERCIAL)
-            indice_fericire = std::min(1.0, indice_fericire + 0.08);
-        else if (cp.get_tip() == CladiriPublice::PARC)
-            indice_fericire = std::min(1.0, indice_fericire + 0.05);
-        else if (cp.get_tip() == CladiriPublice::SPITAL)
-            indice_fericire = std::min(1.0, indice_fericire + 0.07);
-        else if (cp.get_tip() == CladiriPublice::CLADIRE_BIROURI)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::POMPIERI)
-            indice_fericire = std::min(1.0, indice_fericire + 0.03);
-        else if (cp.get_tip() == CladiriPublice::POLITIE)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::SCOALA)
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else if (cp.get_tip() == CladiriPublice::UNIVERSITATE)
-            indice_fericire = std::min(1.0, indice_fericire + 0.04);
-    }
+    double fericire = calcul_fericire(cp.get_tip(), detalii);
+
+    if (fericire > 0)
+        indice_fericire = std::min(1.0, indice_fericire + fericire);
+    else indice_fericire = std::max(0.0, indice_fericire + fericire);
+
     return true;
 }
 
@@ -835,8 +809,7 @@ std::cout << std::fixed << std::setprecision(2);
     CladireRezidentiala casa_noua(201, "Casa Sfatului", 0.0, 300.0, CladiriRezidentiale::CASA, 120.0, 2, 5);
 
     std::cout << "\n>>>: Incercare implementare proiect casa...\n";
-    bool succes_casa = simCity.implementare_proiect_rezidential(proiect_casa, casa_noua, "Cartier Sud");
-    if(succes_casa) std::cout << "SUCCES: Proiectul casa a fost implementat.\n";
+    if(simCity.implementare_proiect_rezidential(proiect_casa, casa_noua, "Cartier Sud")) std::cout << "SUCCES: Proiectul casa a fost implementat.\n";
     else std::cout << "ESEC: Proiectul casa NU a fost implementat.\n";
 
 
