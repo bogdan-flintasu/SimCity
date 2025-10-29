@@ -37,11 +37,6 @@ public:
     [[nodiscard]] double calcul_incasari_zona() const;
 
     [[nodiscard]] const std::string& get_nume() const;
-    [[nodiscard]] const std::vector<CladireRezidentiala>& get_cladiri_rezidentiale() const;
-
-    std::vector<Strada>& get_strazi_modificabile();
-    std::vector<CladireRezidentiala>& get_cladiri_rezidentiale_modificabile();
-    std::vector<CladirePublica>& get_cladiri_publice_modificabile();
 
     [[nodiscard]] bool stergere_strada(int id_tinta);
     [[nodiscard]] bool stergere_rezidentiala(int id_tinta);

@@ -141,6 +141,8 @@ bool Zona::modifica_rezidentiala(int id_tinta, const CladireRezidentiala &date_n
         if (cr.get_ID() == id_tinta) {
             cr.set_cost_intretinere(date_noi.get_cost_intretinere());
             cr.set_numar_locuitori(date_noi.get_numar_locuitori());
+            cr.set_suprafata(date_noi.get_suprafata());
+            cr.set_numar_etaje(date_noi.get_numar_etaje());
             return true;
         }
     }
@@ -152,6 +154,7 @@ bool Zona::modifica_publica(int id_tinta, const CladirePublica &date_noi) {
         if (cp.get_ID() == id_tinta) {
             cp.set_cost_intretinere(date_noi.get_cost_intretinere());
             cp.set_capacitate(date_noi.get_capacitate());
+            cp.set_inchiriat(date_noi.get_inchiriat());
             return true;
         }
     }
@@ -162,9 +165,6 @@ const std::string& Zona::get_nume() const { return nume_zona; }
 const std::vector<CladireRezidentiala>& Zona::get_cladiri_rezidentiale() const {
     return cladiri_rezidentiale;
 }
-std::vector<Strada>& Zona::get_strazi_modificabile() { return strazi; }
-std::vector<CladireRezidentiala>& Zona::get_cladiri_rezidentiale_modificabile() { return cladiri_rezidentiale; }
-std::vector<CladirePublica>& Zona::get_cladiri_publice_modificabile() { return cladiri_publice; }
 
 std::ostream& operator<<(std::ostream& os, const Zona& z) {
     os << " Zona: " << z.nume_zona << "\n\n";
