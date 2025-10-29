@@ -162,9 +162,6 @@ bool Zona::modifica_publica(int id_tinta, const CladirePublica &date_noi) {
 }
 
 const std::string& Zona::get_nume() const { return nume_zona; }
-const std::vector<CladireRezidentiala>& Zona::get_cladiri_rezidentiale() const {
-    return cladiri_rezidentiale;
-}
 
 std::ostream& operator<<(std::ostream& os, const Zona& z) {
     os << " Zona: " << z.nume_zona << "\n\n";
