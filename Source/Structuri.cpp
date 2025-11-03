@@ -37,26 +37,6 @@ double Strada::get_lungime() const { return lungime; }
 int Strada::get_numar_benzi() const { return numar_benzi; }
 bool Strada::get_trotuar() const { return trotuar; }
 
-void Strada::set_cost_intretinere(double cost_nou) {
-    if (cost_nou >= 0) cost_intretinere = cost_nou;
-}
-
-void Strada::set_numar_benzi(int benzi) {
-    if (benzi >= 1) numar_benzi = benzi;
-}
-
-void Strada::set_lungime(double lung) {
-    if (lungime >= 0) lungime = lung;
-}
-
-void Strada::set_sens(bool sens) {
-    sens_unic = sens;
-}
-
-void Strada::set_trotuar(bool are_trotuar) {
-    trotuar = are_trotuar;
-}
-
 std::ostream& operator<<(std::ostream& os, const Strada& s) {
     os << " Strada" << s.nume << " (ID: " << s.ID << ")\n";
     os << " Cost C/I: " << s.cost_construire << "/" << s.cost_intretinere << " RON \n";
@@ -116,25 +96,6 @@ double CladireRezidentiala::get_suprafata() const { return suprafata_utila; }
 int CladireRezidentiala::get_numar_locuitori() const { return numar_locuitori; }
 int CladireRezidentiala::get_numar_etaje() const { return numar_etaje; }
 
-void CladireRezidentiala::set_cost_intretinere(double cost_nou) {
-    if(cost_nou >= 0) cost_intretinere = cost_nou;
-}
-
-void CladireRezidentiala::set_numar_locuitori(int locuitori) {
-    if (locuitori >= 0) numar_locuitori = locuitori;
-}
-
-void CladireRezidentiala::set_numar_etaje(int etaje) {
-    if (etaje >= 0) numar_etaje = etaje;
-}
-
-void CladireRezidentiala::set_suprafata(double suprafata) {
-    if ( suprafata >= 0) suprafata_utila = suprafata;
-}
-
-
-
-
 std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr) {
     os << " Cladire rezidentiala: " << cr.nume << " (Tip: " << reztostr(cr.tip) << ")\n";
     os << " Cost C/I: " << cr.cost_construire << "/" << cr.cost_intretinere << " RON \n";
@@ -187,19 +148,6 @@ const std::string& CladirePublica::get_nume() const { return nume; }
 CladiriPublice CladirePublica::get_tip() const { return tip; }
 int CladirePublica::get_capacitate() const { return capacitate_servicii; }
 bool CladirePublica::get_inchiriat() const { return inchiriat; }
-
-void CladirePublica::set_cost_intretinere(double cost_nou) {
-    if(cost_nou >= 0) cost_intretinere = cost_nou;
-}
-
-void CladirePublica::set_capacitate(int capacitate) {
-    if (capacitate >= 0) capacitate_servicii = capacitate;
-}
-
-void CladirePublica::set_inchiriat(bool inct) {
-    inchiriat = inct;
-}
-
 
 std::ostream& operator<<(std::ostream& os, const CladirePublica& cp) {
     os << " Cladire Publica: " << cp.nume << " (Tip: " << pubtostr(cp.tip) <<")\n";

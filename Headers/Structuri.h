@@ -42,13 +42,6 @@ public:
     [[nodiscard]] int get_numar_benzi() const;
     [[nodiscard]] bool get_trotuar() const;
 
-    // setters
-    void set_cost_intretinere(double cost_nou);
-    void set_numar_benzi(int benzi);
-    void set_trotuar (bool are_trotuar);
-    void set_lungime (double lung);
-    void set_sens (bool unic);
-
     // operator<<
     friend std::ostream& operator<<(std::ostream& os, const Strada& s);
 };
@@ -85,11 +78,6 @@ public:
     [[nodiscard]] double get_suprafata() const;
     [[nodiscard]] int get_numar_locuitori() const;
     [[nodiscard]] int get_numar_etaje() const;
-
-    void set_cost_intretinere(double cost_nou);
-    void set_numar_locuitori(int locuitori);
-    void set_suprafata (double suprafata);
-    void set_numar_etaje(int etaje);
 
     friend std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr);
 };
@@ -130,10 +118,6 @@ public:
     [[nodiscard]] CladiriPublice get_tip() const;
     [[nodiscard]] int get_capacitate() const;
     [[nodiscard]] bool get_inchiriat() const;
-
-    void set_cost_intretinere(double cost_nou);
-    void set_capacitate(int capacitate);
-    void set_inchiriat(bool inct);
 
     friend std::ostream& operator<<(std::ostream& os, const CladirePublica& cp);
 };

@@ -12,34 +12,6 @@ constexpr double COST_IMBUNATATIRE = 15000.00;
 constexpr double COST_DEMOLARE = 5000.00;
 constexpr double BUGET_START = 100000.00;
 
-void testare_getteri_si_setteri(Strada& s, CladireRezidentiala& cr, CladirePublica& cp) {
-    std::cout << "\n--- TESTARE GETTERS/SETTERS ---\n";
-
-    // Strada getteri
-    std::cout << "ID Strada: " << s.get_ID() << ", Nume: " << s.get_nume() << ", Trotuar: " << s.get_trotuar() << std::endl;
-
-    // Strada setteri
-    s.set_cost_intretinere(200.00);
-    s.set_numar_benzi(8);
-    s.set_sens(true);
-    s.set_trotuar(false);
-
-    // Rezidentiala getterii
-    std::cout << "Etaje Rezid: " << cr.get_numar_etaje() << ", Suprafata: " << cr.get_suprafata() << std::endl;
-
-    // Rezidentiala setteri
-    cr.set_cost_intretinere(300.00);
-    cr.set_numar_locuitori(150);
-
-    // Publica setteri
-    cp.set_cost_intretinere(100.00);
-    cp.set_capacitate(400);
-    cp.set_inchiriat(false);
-
-    std::cout << "Starea interna a fost actualizata.\n";
-}
-
-
 int main() {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "================================================\n";
@@ -65,18 +37,15 @@ int main() {
 
     std::cout << "Buget initial: " << simCity.get_buget() << " RON.\n";
 
-    // Test get + set
-    testare_getteri_si_setteri(str_principala, bloc_a1, spital_jud);
-
     // Testare functii
-    std::cout << "\n--- 3. FUNCTII DE CALCUL ȘI STARE ---\n";
+    std::cout << "\n--- 1. FUNCTII DE CALCUL ȘI STARE ---\n";
     std::cout << "FN #1 (Cost Total): " << simCity.calcul_cost_intretinere_total() << " RON\n";
     std::cout << "FN #2 (Incasari Totale): " << simCity.calcul_incasari_totale() << " RON\n";
     std::cout << "FN #3 (Numar Masini): " << simCity.calcul_numar_total_masini() << " masini\n";
     std::cout << "Fericire Curenta (FN Get): " << simCity.get_fericire() << "\n";
 
     // Adaugare DE_LA_ZERO
-    std::cout << "\n--- 4. TEST ADĂUGARE & DEMOLARE ---\n";
+    std::cout << "\n--- 2. TEST ADĂUGARE & DEMOLARE ---\n";
     Proiect p_scoala("Scoala Noua", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 10000.0);
     CladirePublica scoala_noua(400, "Scoala Generala 7", 0.0, 100.0, CladiriPublice::SCOALA, 500, false);
     if(simCity.implementare_proiect_public(p_scoala, scoala_noua, "Cartier Sud")) {

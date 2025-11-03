@@ -125,11 +125,7 @@ double Zona::calcul_incasari_zona() const {
 bool Zona::modifica_strada(int id_tinta, const Strada &date_noi) {
     for (Strada& s : strazi) {
         if (s.get_ID() == id_tinta) {
-            s.set_cost_intretinere(date_noi.get_cost_intretinere());
-            s.set_numar_benzi(date_noi.get_numar_benzi());
-            s.set_lungime(date_noi.get_lungime());
-            s.set_sens(date_noi.get_sens_unic());
-            s.set_trotuar(date_noi.get_trotuar());
+            s = date_noi;
             return true;
         }
     }
@@ -139,10 +135,7 @@ bool Zona::modifica_strada(int id_tinta, const Strada &date_noi) {
 bool Zona::modifica_rezidentiala(int id_tinta, const CladireRezidentiala &date_noi) {
     for (CladireRezidentiala& cr : cladiri_rezidentiale) {
         if (cr.get_ID() == id_tinta) {
-            cr.set_cost_intretinere(date_noi.get_cost_intretinere());
-            cr.set_numar_locuitori(date_noi.get_numar_locuitori());
-            cr.set_suprafata(date_noi.get_suprafata());
-            cr.set_numar_etaje(date_noi.get_numar_etaje());
+            cr = date_noi;
             return true;
         }
     }
@@ -152,9 +145,7 @@ bool Zona::modifica_rezidentiala(int id_tinta, const CladireRezidentiala &date_n
 bool Zona::modifica_publica(int id_tinta, const CladirePublica &date_noi) {
     for (CladirePublica& cp : cladiri_publice) {
         if (cp.get_ID() == id_tinta) {
-            cp.set_cost_intretinere(date_noi.get_cost_intretinere());
-            cp.set_capacitate(date_noi.get_capacitate());
-            cp.set_inchiriat(date_noi.get_inchiriat());
+            cp = date_noi;
             return true;
         }
     }
