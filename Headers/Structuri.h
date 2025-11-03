@@ -40,7 +40,6 @@ public:
     [[nodiscard]] bool get_sens_unic() const;
     [[nodiscard]] double get_lungime() const;
     [[nodiscard]] int get_numar_benzi() const;
-    [[nodiscard]] bool get_trotuar() const;
 
     // operator<<
     friend std::ostream& operator<<(std::ostream& os, const Strada& s);
@@ -75,9 +74,7 @@ public:
     [[nodiscard]] double get_cost_intretinere() const;
     [[nodiscard]] const std::string& get_nume() const;
     [[nodiscard]] CladiriRezidentiale get_tip() const;
-    [[nodiscard]] double get_suprafata() const;
     [[nodiscard]] int get_numar_locuitori() const;
-    [[nodiscard]] int get_numar_etaje() const;
 
     friend std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr);
 };
