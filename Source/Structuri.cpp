@@ -35,7 +35,6 @@ const std::string& Strada::get_nume() const { return nume; }
 bool Strada::get_sens_unic() const { return sens_unic; }
 double Strada::get_lungime() const { return lungime; }
 int Strada::get_numar_benzi() const { return numar_benzi; }
-bool Strada::get_trotuar() const { return trotuar; }
 
 std::ostream& operator<<(std::ostream& os, const Strada& s) {
     os << " Strada" << s.nume << " (ID: " << s.ID << ")\n";
@@ -92,9 +91,7 @@ int CladireRezidentiala::get_ID() const { return ID; }
 double CladireRezidentiala::get_cost_intretinere() const { return cost_intretinere; }
 const std::string& CladireRezidentiala::get_nume() const { return nume; }
 CladiriRezidentiale CladireRezidentiala::get_tip() const { return tip; }
-double CladireRezidentiala::get_suprafata() const { return suprafata_utila; }
 int CladireRezidentiala::get_numar_locuitori() const { return numar_locuitori; }
-int CladireRezidentiala::get_numar_etaje() const { return numar_etaje; }
 
 std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr) {
     os << " Cladire rezidentiala: " << cr.nume << " (Tip: " << reztostr(cr.tip) << ")\n";
