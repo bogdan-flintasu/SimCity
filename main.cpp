@@ -17,7 +17,6 @@ void testare_getteri_si_setteri(Strada& s, CladireRezidentiala& cr, CladirePubli
 
     // Strada getteri
     std::cout << "ID Strada: " << s.get_ID() << ", Nume: " << s.get_nume() << ", Trotuar: " << s.get_trotuar() << std::endl;
-    std::cout << "Cost Construire Strada: " << s.get_cost_construire() << ", Lungime: " << s.get_lungime() << std::endl;
 
     // Strada setteri
     s.set_cost_intretinere(200.00);

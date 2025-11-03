@@ -32,7 +32,6 @@ Strada& Strada::operator=(const Strada& other) {
 int Strada::get_ID() const { return ID; }
 double Strada::get_cost_intretinere() const { return cost_intretinere; }
 const std::string& Strada::get_nume() const { return nume; }
-double Strada::get_cost_construire() const { return cost_construire; }
 bool Strada::get_sens_unic() const { return sens_unic; }
 double Strada::get_lungime() const { return lungime; }
 int Strada::get_numar_benzi() const { return numar_benzi; }
@@ -80,7 +79,16 @@ CladireRezidentiala::CladireRezidentiala(int id, std::string nume_, int cost_c, 
                                                                                                                                                     cost_intretinere(cost_i), tip(tip_), suprafata_utila(suprafata),
                                                                                                                                                     numar_etaje(etaje), numar_locuitori(locatari){}
 
-CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other) = default;
+CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other): ID(other.ID),
+      nume(other.nume),
+      cost_construire(other.cost_construire),
+      cost_intretinere(other.cost_intretinere),
+      tip(other.tip),
+      suprafata_utila(other.suprafata_utila),
+      numar_etaje(other.numar_etaje),
+      numar_locuitori(other.numar_locuitori) {
+    std::cout << "Constructorul de copiere al clasei CladireRezidentiala a fost apelat.\n";
+}
 
 CladireRezidentiala& CladireRezidentiala:: operator=(const CladireRezidentiala& other) {
     if (this != &other) {
@@ -96,10 +104,11 @@ CladireRezidentiala& CladireRezidentiala:: operator=(const CladireRezidentiala& 
     return *this;
 }
 
-CladireRezidentiala::~CladireRezidentiala() = default;
+CladireRezidentiala::~CladireRezidentiala() {
+    std::cout << "Destructorul clasei CladireRezidentiala a fost apelat.\n";
+}
 
 int CladireRezidentiala::get_ID() const { return ID; }
-double CladireRezidentiala::get_cost_construire() const { return cost_construire; }
 double CladireRezidentiala::get_cost_intretinere() const { return cost_intretinere; }
 const std::string& CladireRezidentiala::get_nume() const { return nume; }
 CladiriRezidentiale CladireRezidentiala::get_tip() const { return tip; }
@@ -174,7 +183,6 @@ CladirePublica::~CladirePublica() = default;
 
 int CladirePublica::get_ID() const { return ID; }
 double CladirePublica::get_cost_intretinere() const { return cost_intretinere; }
-double CladirePublica::get_cost_construire() const { return cost_construire; }
 const std::string& CladirePublica::get_nume() const { return nume; }
 CladiriPublice CladirePublica::get_tip() const { return tip; }
 int CladirePublica::get_capacitate() const { return capacitate_servicii; }

@@ -36,7 +36,6 @@ public:
     // getters
     [[nodiscard]] int get_ID() const;
     [[nodiscard]] double get_cost_intretinere() const;
-    [[nodiscard]] double get_cost_construire() const;
     [[nodiscard]] const std::string& get_nume() const;
     [[nodiscard]] bool get_sens_unic() const;
     [[nodiscard]] double get_lungime() const;
@@ -80,7 +79,6 @@ public:
     ~CladireRezidentiala();
 
     [[nodiscard]] int get_ID() const;
-    [[nodiscard]] double get_cost_construire() const;
     [[nodiscard]] double get_cost_intretinere() const;
     [[nodiscard]] const std::string& get_nume() const;
     [[nodiscard]] CladiriRezidentiale get_tip() const;
@@ -128,7 +126,6 @@ public:
 
     [[nodiscard]] int get_ID() const;
     [[nodiscard]] double get_cost_intretinere() const;
-    [[nodiscard]] double get_cost_construire() const;
     [[nodiscard]] const std::string& get_nume() const;
     [[nodiscard]] CladiriPublice get_tip() const;
     [[nodiscard]] int get_capacitate() const;
