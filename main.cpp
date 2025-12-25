@@ -2,11 +2,12 @@
 #include <iostream>
 #include <string>
 
-#include "Headers/Structuri.h"
+#include "Headers/Strada.h"
 #include "Headers/Proiect.h"
 #include "Headers/Zona.h"
 #include "Headers/Oras.h"
-
+#include "Headers/CladirePublica.h"
+#include "Headers/CladireRezidentiala.h"
 
 constexpr double COST_IMBUNATATIRE = 15000.00;
 constexpr double COST_DEMOLARE = 5000.00;

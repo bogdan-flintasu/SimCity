@@ -26,19 +26,32 @@ public:
 
     explicit Oras(std::string nume = "", double buget = 0.0, double fericire_init = 0.5);
 
-    Oras(const Oras& other);
-    Oras& operator=(const Oras& other);
+    Oras(const Oras& other) = delete;
+    Oras& operator=(const Oras& other) = delete;
+
+    Oras(Oras&& other) noexcept = default;
+    Oras& operator=(Oras&& other) noexcept = default;
+
     ~Oras();
 
-    void adauga_zona(const Zona& z);
+    void adauga_zona(Zona z);
 
     [[nodiscard]] double calcul_cost_intretinere_total() const;
     [[nodiscard]] double calcul_incasari_totale() const;
     [[nodiscard]] int calcul_numar_total_masini() const;
 
-    [[nodiscard]] bool implementare_proiect_stradal(const Proiect& p, const Strada& s, const std::string& nume_zona_proiect);
-    [[nodiscard]] bool implementare_proiect_rezidential(const Proiect& p, const CladireRezidentiala& cr, const std::string& nume_zona_proiect);
-    [[nodiscard]] bool implementare_proiect_public(const Proiect& p, const CladirePublica& cp, const std::string& nume_zona_proiect);
+    [[nodiscard]] bool implementare_proiect_stradal(const Proiect& p,
+                                                    const Strada& s,
+                                                    const std::string& nume_zona_proiect);
+
+    [[nodiscard]] bool implementare_proiect_rezidential(const Proiect& p,
+                                                        std::unique_ptr<CladireRezidentiala> cr,
+                                                        const std::string& nume_zona_proiect);
+
+    [[nodiscard]] bool implementare_proiect_public(const Proiect& p,
+                                                   std::unique_ptr<CladirePublica> cp,
+                                                   const std::string& nume_zona_proiect);
+
 
 
 

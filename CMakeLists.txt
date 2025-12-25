@@ -52,8 +52,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
         Source/Oras.cpp
         Source/Zona.cpp
-        Source/Structuri.cpp
+        Source/Strada.cpp
         Source/Proiect.cpp
+        Source/CladirePublica.cpp
+        Source/CladireRezidentiala.cpp
+        Headers/ExceptieOras.h
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/Headers)
