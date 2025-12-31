@@ -31,10 +31,14 @@ void swap(Zona& a, Zona& b) noexcept {
     swap(a.cladiri_publice, b.cladiri_publice);
 }
 
-Zona& Zona::operator=(Zona other) {
-    swap(*this, other);
+Zona& Zona::operator=(const Zona& other) {
+    if (this != &other) {
+        Zona tmp(other);
+        swap(*this, tmp);
+    }
     return *this;
 }
+
 
 Zona::~Zona() = default;
 

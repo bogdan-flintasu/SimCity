@@ -10,6 +10,15 @@
 #include <ostream>
 #include <memory>
 
+#include "Proiect.h"
+
+static double clamp01(const double x) {
+    if (x < 0.0) return 0.0;
+    if (x > 1.0) return 1.0;
+    return x;
+}
+
+
 class CladirePublica {
 protected:
     int ID{};
@@ -41,6 +50,9 @@ public:
     virtual void print(std::ostream& os) const;
 
     [[nodiscard]] virtual std::unique_ptr<CladirePublica> clone() const = 0;
+
+    [[nodiscard]] virtual double impact_fericire(Amanunte actiune) const = 0;
+
 
 
     friend std::ostream& operator<<(std::ostream& os, const CladirePublica& cp);
@@ -108,6 +120,19 @@ public:
         else nivel_coruptie = x;
     }
 
+    [[nodiscard]] double impact_fericire(Amanunte actiune) const override {
+        const double eff = eficienta_cladire();
+        double score = 0.0;
+        score += clamp01(eff / 100.0) * 0.45;
+        score += clamp01(1.0 - nivel_coruptie) * 0.35;
+        score += clamp01(1.0 - timp_raspuns / 60.0) * 0.20;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.02 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.015 * score;
+        return -0.02 * (0.6 + 0.4 * score);
+    }
+
+
     void print(std::ostream& os) const override {
         CladirePublica::print(os);
         os << ", salariati=" << salariati.size()
@@ -119,7 +144,7 @@ public:
     }
 };
 
-class CladireServicii : public CladireAdministrativa {
+class CladireServicii final : public CladireAdministrativa {
 private:
     double dotare{};
     double timp_asteptare{};
@@ -164,6 +189,18 @@ public:
         else rata_rezolvare_cazuri = x;
     }
 
+    [[nodiscard]] double impact_fericire(const Amanunte actiune) const override {
+        double score = 0.0;
+        score += clamp01(dotare / 100.0) * 0.35;
+        score += clamp01(rata_rezolvare_cazuri) * 0.45;
+        score += clamp01(1.0 - timp_asteptare / 60.0) * 0.20;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.05 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.03 * score;
+        return -0.06 * (0.6 + 0.4 * score);
+    }
+
+
     void print(std::ostream& os) const override {
         CladireAdministrativa::print(os);
         os << ", dotare=" << dotare
@@ -178,7 +215,7 @@ public:
 
 };
 
-class CladireEducatie : public CladirePublica {
+class CladireEducatie final : public CladirePublica {
 private:
     std::vector<Salariat> salariati;
     int nivel_educatie{};
@@ -246,6 +283,18 @@ public:
         else rata_absenta = x;
     }
 
+    [[nodiscard]] double impact_fericire(const Amanunte actiune) const override {
+        double score = 0.0;
+        score += clamp01(rata_promovare) * 0.50;
+        score += clamp01(1.0 - rata_absenta) * 0.20;
+        score += clamp01(rating_elevi) * 0.30;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.04 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.02 * score;
+        return -0.04 * (0.6 + 0.4 * score);
+    }
+
+
     void print(std::ostream& os) const override {
         CladirePublica::print(os);
         os << ", salariati=" << static_cast<int>(salariati.size())
@@ -261,7 +310,7 @@ public:
     }
 };
 
-class CladireEconomie : public CladirePublica {
+class CladireEconomie final : public CladirePublica {
 private:
 
 public:
@@ -271,12 +320,21 @@ public:
         return taxe_lunare;
     }
 
+    [[nodiscard]] double impact_fericire(Amanunte actiune) const override {
+        double score = clamp01(taxe_lunare / 2000.0);
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.03 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.02 * score;
+        return -0.04 * (0.6 + 0.4 * score);
+    }
+
+
     [[nodiscard]] std::unique_ptr<CladirePublica> clone() const override {
         return std::make_unique<CladireEconomie>(*this);
     }
 };
 
-class SpatiuVerde : public CladirePublica {
+class SpatiuVerde final : public CladirePublica {
 private:
     double suprafata_mp{};
     double nivel_mentenanta{};
@@ -305,6 +363,17 @@ public:
 
     [[nodiscard]] double get_suprafata_mp() const { return suprafata_mp; }
     [[nodiscard]] double get_nivel_mentenanta() const { return nivel_mentenanta; }
+
+    [[nodiscard]] double impact_fericire(const Amanunte actiune) const override {
+        double score = 0.0;
+        score += clamp01(suprafata_mp / 5000.0) * 0.65;
+        score += clamp01(nivel_mentenanta) * 0.35;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.08 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.03 * score;
+        return -0.07 * (0.6 + 0.4 * score); // DEMOLARE
+    }
+
 
     void set_suprafata_mp(const double x) { suprafata_mp = (x < 0.0 ? 0.0 : x); }
     void set_nivel_mentenanta(const double x) {

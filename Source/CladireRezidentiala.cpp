@@ -24,6 +24,8 @@ CladireRezidentiala::CladireRezidentiala(const int id, std::string nume_, const 
     if (suprafata_utila < 0.0) throw ExceptieDateInvalide("CladireRezidentiala: suprafata negativa");
     if (numar_etaje < 0) throw ExceptieDateInvalide("CladireRezidentiala: etaje negative");
     if (numar_locuitori < 0) throw ExceptieDateInvalide("CladireRezidentiala: locatari negativi");
+
+    if (id > 0 && id >= next_id) next_id = id + 1;
 }
 
 CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other): ID(other.ID),

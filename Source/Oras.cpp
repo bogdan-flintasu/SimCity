@@ -29,6 +29,22 @@ const Zona* Oras::cautare_zona(const std::string& nume) const{
 
 Oras::Oras(std::string nume, const double buget, const double fericire_init): nume_oras(std::move(nume)), buget_curent(buget), indice_fericire(fericire_init) {}
 
+Oras::Oras(const Oras& other) = default;
+
+void swap(Oras& a, Oras& b) noexcept {
+    using std::swap;
+    swap(a.nume_oras, b.nume_oras);
+    swap(a.buget_curent, b.buget_curent);
+    swap(a.indice_fericire, b.indice_fericire);
+    swap(a.zone, b.zone);
+}
+
+Oras& Oras::operator=(Oras other) {
+    swap(*this, other);
+    return *this;
+}
+
+
 Oras::~Oras() = default;
 
 void Oras::adauga_zona(Zona z) { zone.push_back(std::move(z)); }
@@ -83,7 +99,7 @@ static double calcul_fericire(std::string_view tip, Amanunte actiune) {
     return 0.0;
 }
 
-[[nodiscard]] bool Oras::implementare_proiect_stradal(const Proiect& p, const Strada& s, const std::string& nume_zona_proiect) {
+bool Oras::implementare_proiect_stradal(const Proiect& p, const Strada& s, const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::STRADA) return false;
 
     if (buget_curent < p.get_cost_estimat())
@@ -127,7 +143,7 @@ static double calcul_fericire(std::string_view tip, Amanunte actiune) {
 }
 
 
-[[nodiscard]] bool Oras::implementare_proiect_rezidential(const Proiect& p, std::unique_ptr<CladireRezidentiala> cr, const std::string& nume_zona_proiect) {
+bool Oras::implementare_proiect_rezidential(const Proiect& p, std::unique_ptr<CladireRezidentiala> cr, const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::REZIDENTIAL) return false;
 
     if (buget_curent < p.get_cost_estimat())
@@ -192,7 +208,7 @@ static double calcul_fericire(std::string_view tip, Amanunte actiune) {
 
 
 
-[[nodiscard]] bool Oras::implementare_proiect_public(const Proiect& p, std::unique_ptr<CladirePublica> cp, const std::string& nume_zona_proiect) {
+bool Oras::implementare_proiect_public(const Proiect& p, std::unique_ptr<CladirePublica> cp, const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::PUBLIC) return false;
 
     if (buget_curent < p.get_cost_estimat())
@@ -262,6 +278,21 @@ void Oras::simulare_luna() {
     else indice_fericire = std::min(1.0, indice_fericire + 0.01);
     std::cout << "Sold lunar: " << sold << " RON.\nBuget nou: " << buget_curent << " RON.\nFericire noua: " << (indice_fericire*100) << "%\n";
 }
+
+const std::vector<Zona>& Oras::get_zone() const {
+    return zone;
+}
+
+bool Oras::sterge_zona(const std::string& nume) {
+    for (auto it = zone.begin(); it != zone.end(); ++it) {
+        if (it->get_nume() == nume) {
+            zone.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Oras& o) {
     os << "========================================\n";

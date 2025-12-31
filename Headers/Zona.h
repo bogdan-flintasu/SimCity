@@ -24,7 +24,7 @@ public:
     explicit Zona(std::string  nume = "");
 
     Zona(const Zona& other);
-    Zona& operator=(Zona other);
+    Zona& operator=(const Zona& other);
 
     Zona(Zona&&) noexcept = default;
     Zona& operator=(Zona&&) noexcept = default;

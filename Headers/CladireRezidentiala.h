@@ -10,6 +10,15 @@
 #include <vector>
 #include <memory>
 
+#include "Proiect.h"
+
+static double clamp01(const double x) {
+    if (x < 0.0) return 0.0;
+    if (x > 1.0) return 1.0;
+    return x;
+}
+
+
 class CladireRezidentiala {
 protected:
     int ID{};
@@ -41,6 +50,8 @@ public:
     virtual void print(std::ostream& os) const;
 
     [[nodiscard]] virtual std::unique_ptr<CladireRezidentiala> clone() const = 0;
+
+    [[nodiscard]] virtual double impact_fericire(Amanunte actiune) const = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr);
 };
@@ -138,6 +149,26 @@ public:
         sincronizeaza_baza();
     }
 
+    [[nodiscard]] double impact_fericire(Amanunte actiune) const override {
+        const int total = get_nr_apartamente();
+        const int ocupate = get_nr_apartamente_ocupate();
+        const double occ = (total == 0) ? 0.0 : static_cast<double>(ocupate) / static_cast<double>(total);
+
+        const double mp = get_mp_total_apartamente(false);
+        const int loc = get_locatari_total();
+        const double mp_per_loc = (loc == 0) ? 0.0 : mp / static_cast<double>(loc);
+
+        double score = 0.0;
+        score += clamp01(occ) * 0.55;
+        score += clamp01(mp_per_loc / 35.0) * 0.35;
+        score += 0.10;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.035 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.02 * score;
+        return -0.05 * (0.6 + 0.4 * score);
+    }
+
+
     void calculeaza_cost_intretinere(const double cost_fix_bloc,
                                      const double cost_pe_apartament,
                                      const double cost_pe_mp,
@@ -197,6 +228,18 @@ public:
         numar_locuitori = 0;
         ocupata = false;
     }
+
+    [[nodiscard]] double impact_fericire(Amanunte actiune) const override {
+        double score = 0.0;
+        score += clamp01(suprafata_utila / 200.0) * 0.45;
+        score += clamp01(numar_locuitori / 6.0) * 0.35;
+        score += ocupata ? 0.20 : 0.05;
+
+        if (actiune == Amanunte::DE_LA_ZERO)   return +0.03 * score;
+        if (actiune == Amanunte::IMBUNATATIRE) return +0.015 * score;
+        return -0.03 * (0.6 + 0.4 * score); // DEMOLARE
+    }
+
 
     void calculeaza_cost_intretinere(const double cost_fix_casa,
                                      const double cost_pe_mp,

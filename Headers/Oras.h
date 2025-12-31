@@ -26,13 +26,16 @@ public:
 
     explicit Oras(std::string nume = "", double buget = 0.0, double fericire_init = 0.5);
 
-    Oras(const Oras& other) = delete;
-    Oras& operator=(const Oras& other) = delete;
+    Oras(const Oras& other);
+    Oras& operator=(Oras other);
 
     Oras(Oras&& other) noexcept = default;
     Oras& operator=(Oras&& other) noexcept = default;
 
     ~Oras();
+
+    friend void swap(Oras& a, Oras& b) noexcept;
+
 
     void adauga_zona(Zona z);
 
@@ -40,15 +43,15 @@ public:
     [[nodiscard]] double calcul_incasari_totale() const;
     [[nodiscard]] int calcul_numar_total_masini() const;
 
-    [[nodiscard]] bool implementare_proiect_stradal(const Proiect& p,
+    bool implementare_proiect_stradal(const Proiect& p,
                                                     const Strada& s,
                                                     const std::string& nume_zona_proiect);
 
-    [[nodiscard]] bool implementare_proiect_rezidential(const Proiect& p,
+    bool implementare_proiect_rezidential(const Proiect& p,
                                                         std::unique_ptr<CladireRezidentiala> cr,
                                                         const std::string& nume_zona_proiect);
 
-    [[nodiscard]] bool implementare_proiect_public(const Proiect& p,
+    bool implementare_proiect_public(const Proiect& p,
                                                    std::unique_ptr<CladirePublica> cp,
                                                    const std::string& nume_zona_proiect);
 
@@ -59,6 +62,10 @@ public:
 
     [[nodiscard]] double get_buget() const;
     [[nodiscard]] double get_fericire() const;
+
+    [[nodiscard]] const std::vector<Zona>& get_zone() const;
+    [[nodiscard]] bool sterge_zona(const std::string& nume);
+
 
     friend std::ostream& operator<<(std::ostream& os, const Oras& o);
 };

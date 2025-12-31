@@ -21,6 +21,8 @@ CladirePublica::CladirePublica(const int id, std::string  n, const double cost_c
     if (cost_intretinere < 0.0) throw ExceptieDateInvalide("CladirePublica: cost_intretinere negativ");
     if (capacitate_servicii < 0) throw ExceptieDateInvalide("CladirePublica: capacitate negativa");
     if (taxe_lunare < 0.0) throw ExceptieDateInvalide("CladirePublica: taxe_lunare negative");
+
+    if (id > 0 && id >= next_id) next_id = id + 1;
 }
 
 
