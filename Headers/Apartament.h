@@ -21,8 +21,6 @@ public:
                         int locatari_ = 0);
 
     int get_id() const;
-    int get_etaj() const;
-    int get_camere() const;
     double get_mp_total() const;
     int get_locatari() const;
     bool este_vacant() const;

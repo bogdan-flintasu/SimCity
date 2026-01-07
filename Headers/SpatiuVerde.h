@@ -22,9 +22,6 @@ public:
                          double suprafata = 0.0,
                          double mentenanta = 0.0);
 
-    [[nodiscard]] double get_suprafata_mp() const;
-    [[nodiscard]] double get_nivel_mentenanta() const;
-
     void set_suprafata_mp(double x);
     void set_nivel_mentenanta(double x);
 

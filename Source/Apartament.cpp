@@ -17,8 +17,6 @@ Apartament::Apartament(const int id_, const int etaj_, const int camere_, const 
 }
 
 int Apartament::get_id() const { return id; }
-int Apartament::get_etaj() const { return etaj; }
-int Apartament::get_camere() const { return camere; }
 double Apartament::get_mp_total() const { return mp_total; }
 int Apartament::get_locatari() const { return locatari; }
 bool Apartament::este_vacant() const { return vacant; }

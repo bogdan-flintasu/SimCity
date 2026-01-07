@@ -28,13 +28,8 @@ public:
                      double automatizare_ = 0.5,
                      double siguranta_ = 0.5);
 
-    [[nodiscard]] double get_productie_lunara() const;
-    [[nodiscard]] double get_automatizare() const;
-    [[nodiscard]] double get_siguranta() const;
-
     void set_productie_lunara(double v);
     void set_automatizare(double v);
-    void set_siguranta(double v);
 
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;

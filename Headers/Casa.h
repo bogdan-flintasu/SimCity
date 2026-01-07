@@ -23,7 +23,6 @@ public:
     [[nodiscard]] bool este_ocupata() const;
 
     void seteaza_locatari(int locatari);
-    void seteaza_vacanta();
 
     void calculeaza_cost_intretinere(double cost_fix_casa,
                                      double cost_pe_mp,

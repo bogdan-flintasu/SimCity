@@ -31,15 +31,8 @@ public:
                              int locuri_parcare_ = 0,
                              double nivel_servicii_ = 0.5);
 
-    [[nodiscard]] int get_unitati() const;
-    [[nodiscard]] double get_trafic_zilnic() const;
-    [[nodiscard]] int get_locuri_parcare() const;
-    [[nodiscard]] double get_nivel_servicii() const;
-
-    void set_unitati(int v);
     void set_trafic_zilnic(double v);
     void set_locuri_parcare(int v);
-    void set_nivel_servicii(double v);
 
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;

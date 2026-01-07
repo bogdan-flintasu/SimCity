@@ -24,15 +24,8 @@ SpatiuComercial::SpatiuComercial(const int id,
       locuri_parcare(locuri_parcare_ < 0 ? 0 : locuri_parcare_),
       nivel_servicii(clamp01(nivel_servicii_)) {}
 
-int SpatiuComercial::get_unitati() const { return unitati; }
-double SpatiuComercial::get_trafic_zilnic() const { return trafic_zilnic; }
-int SpatiuComercial::get_locuri_parcare() const { return locuri_parcare; }
-double SpatiuComercial::get_nivel_servicii() const { return nivel_servicii; }
-
-void SpatiuComercial::set_unitati(const int v) { unitati = (v < 0 ? 0 : v); }
 void SpatiuComercial::set_trafic_zilnic(const double v) { trafic_zilnic = (v < 0 ? 0.0 : v); }
 void SpatiuComercial::set_locuri_parcare(const int v) { locuri_parcare = (v < 0 ? 0 : v); }
-void SpatiuComercial::set_nivel_servicii(const double v) { nivel_servicii = clamp01(v); }
 
 
 double SpatiuComercial::eficienta_trafic() const {

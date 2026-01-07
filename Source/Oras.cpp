@@ -74,8 +74,6 @@ int Oras::calcul_numar_total_masini() const {
     return total;
 }
 
-double Oras::get_buget() const { return buget_curent; }
-double Oras::get_fericire() const { return indice_fericire; }
 
 
 
@@ -243,9 +241,6 @@ void Oras::simulare_luna() {
               << " RON.\nFericire noua: " << (indice_fericire * 100) << "%\n";
 }
 
-const std::vector<Zona>& Oras::get_zone() const {
-    return zone;
-}
 
 bool Oras::sterge_zona(const std::string& nume) {
     for (auto it = zone.begin(); it != zone.end(); ++it) {

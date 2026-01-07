@@ -22,8 +22,6 @@ public:
                              bool inchiriat_ = false,
                              double infrastructura_ = 0.5);
 
-    [[nodiscard]] double get_infrastructura() const;
-    void set_infrastructura(double v);
 
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;

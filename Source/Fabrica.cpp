@@ -22,13 +22,8 @@ Fabrica::Fabrica(const int id,
       automatizare(clamp01(automatizare_)),
       siguranta(clamp01(siguranta_)) {}
 
-double Fabrica::get_productie_lunara() const { return productie_lunara; }
-double Fabrica::get_automatizare() const { return automatizare; }
-double Fabrica::get_siguranta() const { return siguranta; }
-
 void Fabrica::set_productie_lunara(const double v) { productie_lunara = (v < 0 ? 0.0 : v); }
 void Fabrica::set_automatizare(const double v) { automatizare = clamp01(v); }
-void Fabrica::set_siguranta(const double v) { siguranta = clamp01(v); }
 
 double Fabrica::incasari() const {
     const double baza = CladireEconomie::incasari();

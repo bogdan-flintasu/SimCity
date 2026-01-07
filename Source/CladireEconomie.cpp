@@ -13,8 +13,6 @@ CladireEconomie::CladireEconomie(const int id,
     : CladirePublica(id, std::move(nume_), cost_c, cost_i, capacitate, inchiriat_),
       infrastructura(clamp01(infrastructura_)) {}
 
-double CladireEconomie::get_infrastructura() const { return infrastructura; }
-void CladireEconomie::set_infrastructura(const double v) { infrastructura = clamp01(v); }
 
 double CladireEconomie::incasari() const {
     const double cap  = clamp01(static_cast<double>(get_capacitate()) / 2000.0);

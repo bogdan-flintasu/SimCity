@@ -29,10 +29,7 @@ public:
                              double stoc_curent_ = 0.0,
                              double rata_rezolvare_ = 0.0);
 
-    [[nodiscard]] double get_dotare() const;
-    [[nodiscard]] double get_timp_asteptare() const;
-    [[nodiscard]] double get_stoc_curent() const;
-    [[nodiscard]] double get_rata_rezolvare_cazuri() const;
+
 
     void set_dotare(double x);
     void set_timp_asteptare(double x);

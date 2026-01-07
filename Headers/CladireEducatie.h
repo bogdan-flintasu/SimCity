@@ -36,11 +36,6 @@ public:
     [[nodiscard]] int get_nr_salariati() const;
     [[nodiscard]] double eficienta_cladire() const;
 
-    [[nodiscard]] int get_nivel_educatie() const;
-    [[nodiscard]] double get_rata_promovare() const;
-    [[nodiscard]] double get_rata_absenta() const;
-    [[nodiscard]] double get_rating_elevi() const;
-
     void set_nivel_educatie(int x);
     void set_rata_promovare(double x);
     void set_absente(double x);

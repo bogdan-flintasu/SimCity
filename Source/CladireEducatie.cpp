@@ -47,11 +47,6 @@ double CladireEducatie::eficienta_cladire() const {
     return suma / static_cast<double>(salariati.size());
 }
 
-int CladireEducatie::get_nivel_educatie() const { return nivel_educatie; }
-double CladireEducatie::get_rata_promovare() const { return rata_promovare; }
-double CladireEducatie::get_rata_absenta() const { return rata_absenta; }
-double CladireEducatie::get_rating_elevi() const { return rating_elevi; }
-
 void CladireEducatie::set_nivel_educatie(const int x) { nivel_educatie = (x < 0 ? 0 : x); }
 
 void CladireEducatie::set_rata_promovare(const double x) {

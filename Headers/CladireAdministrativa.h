@@ -32,10 +32,6 @@ public:
     [[nodiscard]] int get_nr_salariati() const;
     [[nodiscard]] double eficienta_cladire() const;
 
-    [[nodiscard]] int get_nivel_securitate() const;
-    [[nodiscard]] double get_timp_raspuns() const;
-    [[nodiscard]] double get_nivel_coruptie() const;
-
     void set_nivel_coruptie(double x);
 
     [[nodiscard]] double incasari() const override;

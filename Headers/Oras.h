@@ -60,10 +60,7 @@ public:
 
     void simulare_luna();
 
-    [[nodiscard]] double get_buget() const;
-    [[nodiscard]] double get_fericire() const;
 
-    [[nodiscard]] const std::vector<Zona>& get_zone() const;
     [[nodiscard]] bool sterge_zona(const std::string& nume);
 
 

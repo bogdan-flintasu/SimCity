@@ -26,11 +26,6 @@ void Casa::seteaza_locatari(const int locatari) {
     ocupata = (numar_locuitori > 0);
 }
 
-void Casa::seteaza_vacanta() {
-    numar_locuitori = 0;
-    ocupata = false;
-}
-
 void Casa::calculeaza_cost_intretinere(const double cost_fix_casa,
                                        const double cost_pe_mp,
                                        const double cost_pe_locatar) {

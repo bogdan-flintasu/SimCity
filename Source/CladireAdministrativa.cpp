@@ -45,10 +45,6 @@ double CladireAdministrativa::eficienta_cladire() const {
     return s / static_cast<double>(salariati.size());
 }
 
-int CladireAdministrativa::get_nivel_securitate() const { return nivel_securitate; }
-double CladireAdministrativa::get_timp_raspuns() const { return timp_raspuns; }
-double CladireAdministrativa::get_nivel_coruptie() const { return nivel_coruptie; }
-
 void CladireAdministrativa::set_nivel_coruptie(const double x) {
     if (x < 0.0) nivel_coruptie = 0.0;
     else if (x > 1.0) nivel_coruptie = 1.0;

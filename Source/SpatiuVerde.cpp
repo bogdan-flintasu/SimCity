@@ -23,9 +23,6 @@ SpatiuVerde::SpatiuVerde(const int id,
     if (nivel_mentenanta < 0.0 || nivel_mentenanta > 1.0) throw ExceptieDateInvalide("SpatiuVerde: mentenanta in afara [0,1]");
 }
 
-double SpatiuVerde::get_suprafata_mp() const { return suprafata_mp; }
-double SpatiuVerde::get_nivel_mentenanta() const { return nivel_mentenanta; }
-
 void SpatiuVerde::set_suprafata_mp(const double x) { suprafata_mp = (x < 0.0 ? 0.0 : x); }
 
 void SpatiuVerde::set_nivel_mentenanta(const double x) {
