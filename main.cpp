@@ -2,7 +2,6 @@
 #include <memory>
 // ... restul includerilor tale ...
 #include "Headers/Oras.h"
-#include "Headers/ExceptieOras.h"
 #include "Headers/Casa.h"
 #include "Headers/Bloc.h"
 #include "Headers/SpatiuVerde.h"
@@ -16,7 +15,7 @@
 
 static void title(const char* s) {
     // Comenteaza cout-ul si aici pentru siguranta maxima pe MSan
-    // std::cout << "\n==================== " << s << " ====================\n";
+    std::cout << "\n==================== " << s << " ====================\n";
 }
 
 int main() {
@@ -182,7 +181,7 @@ int main() {
         title("20) Sterge zona");
         {
             const bool ok = o->sterge_zona("Nord");
-            // std::cout << (ok ? "OK\n" : "NU\n"); // Evita cout
+            std::cout << (ok ? "OK\n" : "NU\n"); // Evita cout
         }
 
         // COMENTEAZA FINALUL care face afisare masiva
@@ -191,7 +190,7 @@ int main() {
         // std::cout << *o;
 
     } catch (const std::exception& e) {
-        // std::cout << "Eroare: " << e.what() << "\n";
+        std::cout << "Eroare: " << e.what() << "\n";
     }
 
     return 0;
