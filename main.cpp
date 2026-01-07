@@ -1,34 +1,43 @@
 #include <iostream>
 #include <memory>
-// ... restul includerilor tale ...
+
 #include "Headers/Oras.h"
+#include "Headers/ExceptieOras.h"
+
 #include "Headers/Casa.h"
 #include "Headers/Bloc.h"
+
 #include "Headers/SpatiuVerde.h"
 #include "Headers/CladireEconomie.h"
 #include "Headers/CladireAdministrativa.h"
 #include "Headers/CladireServicii.h"
 #include "Headers/CladireEducatie.h"
+
 #include "Headers/Fabrica.h"
 #include "Headers/SpatiuComercial.h"
+
 #include "Headers/Strada.h"
 
 static void title(const char* s) {
-    // Comenteaza cout-ul si aici pentru siguranta maxima pe MSan
+    // Putem lasa cout aici, dar daca tot crapa, comenteaza linia de mai jos
     std::cout << "\n==================== " << s << " ====================\n";
 }
 
 int main() {
+    // Mesaj de control sa vedem ca porneste
+    std::cout << "DEBUG: START PROGRAM..." << std::endl;
+
     try {
         Strada::reset_id(1);
 
-        // MODIFICARE CRITICA: Alocam Oras pe HEAP, nu pe STIVA
+        // --- SCHIMBARE CRITICA PENTRU STACK OVERFLOW ---
+        // Alocam Orasul pe HEAP (memorie mare), nu pe STIVA (memorie mica)
         auto o = std::make_unique<Oras>("Bucuresti", 20000.0, 0.50);
 
         o->adauga_zona(Zona("Centru"));
         o->adauga_zona(Zona("Nord"));
 
-        title("0) STRAZI");
+        title("0) STRAZI: construire prin proiect");
         {
             Proiect pS1("Construire strada 1", Proiecte::STRADA, Amanunte::DE_LA_ZERO, 400);
             Proiect pS2("Construire strada 2", Proiecte::STRADA, Amanunte::DE_LA_ZERO, 450);
@@ -36,11 +45,12 @@ int main() {
             Strada s1(1, "Bd. Unirii",       1.5, 2.0,  true,  false, 2, 300.0);
             Strada s2(2, "Str. Aviatorilor", 2.2, 3.0,  true,  true,  3, 350.0);
 
+            // Folosim operatorul -> pentru ca 'o' este pointer
             o->implementare_proiect_stradal(pS1, s1, "Centru");
             o->implementare_proiect_stradal(pS2, s2, "Nord");
         }
 
-        title("1) REZIDENTIAL: Casa");
+        title("1) REZIDENTIAL: Construire Casa (ID=1, Centru)");
         {
             Proiect p("Construire Casa", Proiecte::REZIDENTIAL, Amanunte::DE_LA_ZERO, 2000);
             auto casa = std::make_unique<Casa>(1);
@@ -49,21 +59,24 @@ int main() {
             o->implementare_proiect_rezidential(p, std::move(casa), "Centru");
         }
 
-        title("2) REZIDENTIAL: Bloc");
+        title("2) REZIDENTIAL: Construire Bloc (ID=2, Nord)");
         {
             Proiect p("Construire Bloc", Proiecte::REZIDENTIAL, Amanunte::DE_LA_ZERO, 3500);
             auto bloc = std::make_unique<Bloc>(2);
+
             Apartament a1(1, 0, 2, 55.0, 2);
             Apartament a2(2, 1, 3, 78.0, 3);
             Apartament a3(3, 2, 1, 35.0, 1);
+
             bloc->adauga_apartament(a1);
             bloc->adauga_apartament(a2);
             bloc->adauga_apartament(a3);
+
             bloc->calculeaza_cost_intretinere(200.0, 20.0, 1.2);
             o->implementare_proiect_rezidential(p, std::move(bloc), "Nord");
         }
 
-        title("3) PUBLIC: SpatiuVerde");
+        title("3) PUBLIC: Construire SpatiuVerde (ID=3, Centru)");
         {
             Proiect p("Construire Parc", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 1500);
             auto parc = std::make_unique<SpatiuVerde>(3);
@@ -72,32 +85,36 @@ int main() {
             o->implementare_proiect_public(p, std::move(parc), "Centru");
         }
 
-        title("4) PUBLIC: Economie");
+        title("4) PUBLIC: Construire CladireEconomie (ID=4, Centru)");
         {
             Proiect p("Construire Economie", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 1200);
             auto eco = std::make_unique<CladireEconomie>(4);
             o->implementare_proiect_public(p, std::move(eco), "Centru");
         }
 
-        title("5) PUBLIC: Fabrica");
+        title("5) PUBLIC: Construire Fabrica (ID=8, Nord)");
         {
             Proiect p("Construire Fabrica", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 2200);
             auto fab = std::make_unique<Fabrica>(8);
+
             fab->set_productie_lunara(400);
             fab->set_automatizare(0.55);
+
             o->implementare_proiect_public(p, std::move(fab), "Nord");
         }
 
-        title("6) PUBLIC: SpatiuComercial");
+        title("6) PUBLIC: Construire SpatiuComercial (ID=9, Centru)");
         {
             Proiect p("Construire SpatiuComercial", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 2100);
             auto spc = std::make_unique<SpatiuComercial>(9);
+
             spc->set_trafic_zilnic(2500);
             spc->set_locuri_parcare(140);
+
             o->implementare_proiect_public(p, std::move(spc), "Centru");
         }
 
-        title("7) PUBLIC: Administrativa");
+        title("7) PUBLIC: Construire CladireAdministrativa (ID=5, Nord)");
         {
             Proiect p("Construire Administratie", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 1800);
             auto adm = std::make_unique<CladireAdministrativa>(5);
@@ -107,7 +124,7 @@ int main() {
             o->implementare_proiect_public(p, std::move(adm), "Nord");
         }
 
-        title("8) PUBLIC: Servicii");
+        title("8) PUBLIC: Construire CladireServicii (ID=6, Nord)");
         {
             Proiect p("Construire Servicii", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 1600);
             auto serv = std::make_unique<CladireServicii>(6);
@@ -118,7 +135,7 @@ int main() {
             o->implementare_proiect_public(p, std::move(serv), "Nord");
         }
 
-        title("9) PUBLIC: Educatie");
+        title("9) PUBLIC: Construire CladireEducatie (ID=7, Centru)");
         {
             Proiect p("Construire Educatie", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 1700);
             auto edu = std::make_unique<CladireEducatie>(7);
@@ -130,7 +147,7 @@ int main() {
             o->implementare_proiect_public(p, std::move(edu), "Centru");
         }
 
-        title("10) IMBUNATATIRE: Casa");
+        title("10) IMBUNATATIRE: Casa (ID=1, Centru)");
         {
             Proiect p("Upgrade Casa", Proiecte::REZIDENTIAL, Amanunte::IMBUNATATIRE, 200);
             auto casa2 = std::make_unique<Casa>(1);
@@ -139,59 +156,112 @@ int main() {
             o->implementare_proiect_rezidential(p, std::move(casa2), "Centru");
         }
 
-        title("11) IMBUNATATIRE: SpatiuComercial");
+        title("11) IMBUNATATIRE: SpatiuComercial (ID=9, Centru)");
         {
             Proiect p("Upgrade SpatiuComercial", Proiecte::PUBLIC, Amanunte::IMBUNATATIRE, 250);
             auto spc2 = std::make_unique<SpatiuComercial>(9);
+
             spc2->set_trafic_zilnic(3200);
             spc2->set_locuri_parcare(180);
+
             o->implementare_proiect_public(p, std::move(spc2), "Centru");
         }
 
-        title("12) IMBUNATATIRE: Fabrica");
+        title("12) IMBUNATATIRE: Fabrica (ID=8, Nord)");
         {
             Proiect p("Upgrade Fabrica", Proiecte::PUBLIC, Amanunte::IMBUNATATIRE, 300);
             auto fab2 = std::make_unique<Fabrica>(8);
+
             fab2->set_automatizare(0.70);
+
             o->implementare_proiect_public(p, std::move(fab2), "Nord");
         }
 
-        // Testele cu exceptii raman comentate pentru siguranta pe GitHub Actions
-        /* title("13) IMBUNATATIRE incompatibila"); ...
-        title("18) EXCEPTIE"); ...
-        title("19) EXCEPTIE"); ...
-        */
+        title("13) IMBUNATATIRE incompatibila: exceptie asteptata");
+        {
+            Proiect p("Upgrade gresit", Proiecte::REZIDENTIAL, Amanunte::IMBUNATATIRE, 100);
+            auto bloc_bad = std::make_unique<Bloc>(1);
 
-        title("14) DEMOLARE: Bloc");
+            try {
+                o->implementare_proiect_rezidential(p, std::move(bloc_bad), "Centru");
+                std::cout << "EROARE: trebuia ExceptieTipIncompatibil.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
+
+        title("14) DEMOLARE: Bloc (ID=2, Nord)");
         {
             Proiect p("Demolare Bloc", Proiecte::REZIDENTIAL, Amanunte::DEMOLARE, 50);
             auto dummy = std::make_unique<Bloc>(2);
             o->implementare_proiect_rezidential(p, std::move(dummy), "Nord");
         }
 
-        title("15) DEMOLARE: Fabrica");
+        title("15) DEMOLARE: Fabrica (ID=8, Nord)");
         {
             Proiect p("Demolare Fabrica", Proiecte::PUBLIC, Amanunte::DEMOLARE, 50);
             auto dummy = std::make_unique<Fabrica>(8);
             o->implementare_proiect_public(p, std::move(dummy), "Nord");
         }
 
-        // ... restul demolarilor ...
-
-        title("20) Sterge zona");
+        title("16) DEMOLARE: SpatiuComercial (ID=9, Centru)");
         {
-            const bool ok = o->sterge_zona("Nord");
-            std::cout << (ok ? "OK\n" : "NU\n"); // Evita cout
+            Proiect p("Demolare SpatiuComercial", Proiecte::PUBLIC, Amanunte::DEMOLARE, 50);
+            auto dummy = std::make_unique<SpatiuComercial>(9);
+            o->implementare_proiect_public(p, std::move(dummy), "Centru");
         }
 
-        // COMENTEAZA FINALUL care face afisare masiva
-        // title("21) SIMULARE");
-        // o->simulare_luna();
-        // std::cout << *o;
+        title("17) DEMOLARE: SpatiuVerde (ID=3, Centru)");
+        {
+            Proiect p("Demolare Parc", Proiecte::PUBLIC, Amanunte::DEMOLARE, 50);
+            auto dummy = std::make_unique<SpatiuVerde>(3);
+            o->implementare_proiect_public(p, std::move(dummy), "Centru");
+        }
 
+        title("18) EXCEPTIE: Buget insuficient");
+        {
+            Proiect p("Proiect scump", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 999999);
+            auto dummy = std::make_unique<CladireEconomie>(100);
+
+            try {
+                o->implementare_proiect_public(p, std::move(dummy), "Centru");
+                std::cout << "EROARE: trebuia ExceptieBugetInsuficient.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
+
+        title("19) EXCEPTIE: Zona inexistenta");
+        {
+            Proiect p("Zona inexistenta", Proiecte::REZIDENTIAL, Amanunte::DE_LA_ZERO, 10);
+            auto dummy = std::make_unique<Casa>(200);
+
+            try {
+                o->implementare_proiect_rezidential(p, std::move(dummy), "NU_EXISTA");
+                std::cout << "EROARE: trebuia ExceptieZonaInexistenta.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
+
+        title("20) sterge zona");
+        {
+            const bool ok = o->sterge_zona("Nord");
+            std::cout << (ok ? "OK: Nord stearsa.\n" : "NU: Nord nu exista.\n");
+        }
+
+        title("21) SIMULARE + RAPORT FINAL");
+        o->simulare_luna();
+
+        // Dereferentiem pointerul (*o) pentru a-l afisa
+        std::cout << *o << std::endl;
+
+    } catch (const ExceptieOras& e) {
+        std::cout << "Exceptie Oras (neprinsa intern): " << e.what() << std::endl;
     } catch (const std::exception& e) {
-        std::cout << "Eroare: " << e.what() << "\n";
+        std::cout << "Exceptie std: " << e.what() << std::endl;
     }
 
+    std::cout << "DEBUG: PROGRAM FINISHED SUCCESSFULLY" << std::endl;
     return 0;
 }
