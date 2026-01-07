@@ -225,7 +225,9 @@ void Oras::simulare_luna() {
     std::cout << "\n>>> SIMULARE LUNA... <<<\n";
     const double cost_lunar = calcul_cost_intretinere_total();
     const double venit_lunar = calcul_incasari_totale();
+    const int masini = calcul_numar_total_masini();
 
+    std::cout << "Masini in oras: " << masini << "\n";
     std::cout << "Cost intretinere lunar: " << cost_lunar << " RON\n";
     std::cout << "Venit lunar (taxe+chirii): " << venit_lunar << " RON\n";
 

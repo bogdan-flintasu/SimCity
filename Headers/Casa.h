@@ -20,8 +20,6 @@ public:
                   int etaje = 0,
                   int locatari = 0);
 
-    [[nodiscard]] bool este_ocupata() const;
-
     void seteaza_locatari(int locatari);
 
     void calculeaza_cost_intretinere(double cost_fix_casa,

@@ -13,9 +13,10 @@
 #include "Headers/CladireServicii.h"
 #include "Headers/CladireEducatie.h"
 
-// NOI:
 #include "Headers/Fabrica.h"
 #include "Headers/SpatiuComercial.h"
+
+#include "Headers/Strada.h"
 
 static void title(const char* s) {
     std::cout << "\n==================== " << s << " ====================\n";
@@ -23,9 +24,23 @@ static void title(const char* s) {
 
 int main() {
     try {
+        Strada::reset_id(1);
+
         Oras o("Bucuresti", 20000.0, 0.50);
         o.adauga_zona(Zona("Centru"));
         o.adauga_zona(Zona("Nord"));
+
+        title("0) STRAZI: construire prin proiect (ca sa fie folosita implementare_proiect_stradal)");
+        {
+            Proiect pS1("Construire strada 1", Proiecte::STRADA, Amanunte::DE_LA_ZERO, 400);
+            Proiect pS2("Construire strada 2", Proiecte::STRADA, Amanunte::DE_LA_ZERO, 450);
+
+            Strada s1(1, "Bd. Unirii",       1.5, 2.0,  true,  false, 2, 300.0);
+            Strada s2(2, "Str. Aviatorilor", 2.2, 3.0,  true,  true,  3, 350.0);
+
+            o.implementare_proiect_stradal(pS1, s1, "Centru");
+            o.implementare_proiect_stradal(pS2, s2, "Nord");
+        }
 
         title("1) REZIDENTIAL: Construire Casa (ID=1, Centru)");
         {
@@ -84,7 +99,6 @@ int main() {
         {
             Proiect p("Construire SpatiuComercial", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 2100);
             auto spc = std::make_unique<SpatiuComercial>(9);
-
 
             spc->set_trafic_zilnic(2500);
             spc->set_locuri_parcare(140);
@@ -150,7 +164,6 @@ int main() {
             Proiect p("Upgrade Fabrica", Proiecte::PUBLIC, Amanunte::IMBUNATATIRE, 300);
             auto fab2 = std::make_unique<Fabrica>(8);
 
-            // setari upgrade (inlocuiesti cu ce ai tu)
             fab2->set_automatizare(0.70);
 
             o.implementare_proiect_public(p, std::move(fab2), "Nord");
@@ -223,7 +236,13 @@ int main() {
             }
         }
 
-        title("20) SIMULARE + RAPORT FINAL");
+        title("20) sterge zona (ca sa fie folosita Oras::sterge_zona)");
+        {
+            const bool ok = o.sterge_zona("Nord");
+            std::cout << (ok ? "OK: Nord stearsa.\n" : "NU: Nord nu exista.\n");
+        }
+
+        title("21) SIMULARE + RAPORT FINAL");
         o.simulare_luna();
         std::cout << o;
 

@@ -17,9 +17,6 @@ Casa::Casa(const int id,
     : CladireRezidentiala(id, std::move(nume_), cost_c, 0.0, suprafata, etaje, locatari),
       ocupata(locatari > 0) {}
 
-bool Casa::este_ocupata() const {
-    return ocupata;
-}
 
 void Casa::seteaza_locatari(const int locatari) {
     numar_locuitori = (locatari < 0 ? 0 : locatari);
