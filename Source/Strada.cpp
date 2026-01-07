@@ -22,7 +22,7 @@ Strada::Strada(int id, std::string  nume_, double cost_c, double cost_i, bool tr
 Strada::Strada(const Strada& other) = default;
 
 
-Strada::~Strada() = default;
+Strada::~Strada() {}
 
 Strada& Strada::operator=(const Strada& other) {
     if (this != &other) {

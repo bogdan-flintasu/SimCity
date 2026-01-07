@@ -35,7 +35,6 @@ CladireRezidentiala::CladireRezidentiala(const CladireRezidentiala &other): ID(o
       suprafata_utila(other.suprafata_utila),
       numar_etaje(other.numar_etaje),
       numar_locuitori(other.numar_locuitori) {
-    std::cout << "Constructorul de copiere al clasei CladireRezidentiala a fost apelat.\n";
 }
 
 CladireRezidentiala& CladireRezidentiala:: operator=(const CladireRezidentiala& other) {
@@ -51,9 +50,7 @@ CladireRezidentiala& CladireRezidentiala:: operator=(const CladireRezidentiala& 
     return *this;
 }
 
-CladireRezidentiala::~CladireRezidentiala() {
-    std::cout << "Destructorul clasei CladireRezidentiala a fost apelat.\n";
-}
+CladireRezidentiala::~CladireRezidentiala() {}
 
 int CladireRezidentiala::get_ID() const { return ID; }
 double CladireRezidentiala::get_cost_intretinere() const { return cost_intretinere; }
