@@ -86,27 +86,17 @@ int Zona::calcul_numar_masini_zona() const {
 
 double Zona::calcul_incasari_zona() const {
     double total = 0.0;
-
     for (const auto& cr : cladiri_rezidentiale) {
-        const double v = cr->incasari_lunare();
-        std::cout << "[INCASARI REZ] ID=" << cr->get_ID() << " v=" << v << "\n";
-        total += v;
+        total += cr->incasari_lunare();
     }
-
     for (const auto& cp : cladiri_publice) {
-        const double v = cp->incasari();
-        std::cout << "[INCASARI PUB] ID=" << cp->get_ID() << " v=" << v << "\n";
-        total += v;
+        total += cp->incasari();
     }
-
     for (const Strada& s : strazi) {
         double taxa = s.get_numar_benzi() * 7.0 * s.get_lungime() * 0.5;
         if (!s.get_sens_unic()) taxa *= 2.0;
-        std::cout << "[TAXA STR] ID=" << s.get_ID() << " taxa=" << taxa << "\n";
         total += taxa;
     }
-
-    std::cout << "[INCASARI ZONA TOTAL] " << total << "\n";
     return total;
 }
 

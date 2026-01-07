@@ -242,9 +242,9 @@ int main() {
             std::cout << (ok ? "OK: Nord stearsa.\n" : "NU: Nord nu exista.\n");
         }
 
-        title("21) SIMULARE + RAPORT FINAL");
-        o.simulare_luna();
-        //std::cout << o;
+        // title("21) SIMULARE + RAPORT FINAL");
+        // o.simulare_luna();
+        // //std::cout << o;
 
     } catch (const ExceptieOras& e) {
         std::cout << "Exceptie Oras (neprinsa intern): " << e.what() << "\n";
