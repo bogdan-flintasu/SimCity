@@ -6,6 +6,8 @@
 #include "../Headers/Clamp.h"
 
 #include <utility>
+#include <ostream>
+
 
 Fabrica::Fabrica(const int id,
                  std::string nume_,

@@ -4,6 +4,8 @@
 
 #include <string>
 #include <utility>
+#include <ostream>
+
 
 #include "../Headers/Zona.h"
 #include "../Headers/ExceptieOras.h"

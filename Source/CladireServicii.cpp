@@ -6,6 +6,9 @@
 #include "../Headers/ExceptieOras.h"
 #include "Clamp.h"
 
+#include <ostream>
+
+
 
 CladireServicii::CladireServicii(const int id,
                                  std::string nume_,

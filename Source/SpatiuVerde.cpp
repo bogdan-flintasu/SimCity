@@ -6,6 +6,8 @@
 #include "../Headers/ExceptieOras.h"
 #include "Clamp.h"
 
+#include <ostream>
+
 
 SpatiuVerde::SpatiuVerde(const int id,
                          std::string nume_,

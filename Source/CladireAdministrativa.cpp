@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <ostream>
 
 CladireAdministrativa::CladireAdministrativa(const int id,
                                              std::string nume_,

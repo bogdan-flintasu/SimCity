@@ -7,6 +7,8 @@
 
 
 #include <algorithm>
+#include <ostream>
+
 
 Casa::Casa(const int id,
            std::string nume_,

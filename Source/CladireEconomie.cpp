@@ -2,6 +2,8 @@
 #include "../Headers/Clamp.h"
 
 #include <utility>
+#include <ostream>
+
 
 CladireEconomie::CladireEconomie(const int id,
                                  std::string nume_,

@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+
 #include <../Headers/CladirePublica.h>
 #include "../Headers/ExceptieOras.h"
 
