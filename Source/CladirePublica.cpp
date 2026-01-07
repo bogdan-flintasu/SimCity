@@ -56,8 +56,6 @@ void CladirePublica::print(std::ostream& os) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const CladirePublica& cp) {
-    os << " { ";
     cp.print(os);
-    os << " }";
     return os;
 }

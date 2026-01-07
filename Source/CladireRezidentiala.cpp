@@ -69,8 +69,6 @@ void CladireRezidentiala::print(std::ostream &os) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const CladireRezidentiala& cr) {
-    os  << " { ";
     cr.print(os);
-    os << " }";
     return os;
 }
