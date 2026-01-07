@@ -145,26 +145,24 @@ bool Zona::modifica_rezidentiala(int id_tinta, std::unique_ptr<CladireRezidentia
     if (!date_noi) throw ExceptieDateInvalide("modifica_rezidentiala: date_noi null");
 
     for (auto& cr : cladiri_rezidentiale) {
-        if (!cr || cr->get_ID() != id_tinta) continue;
+        if (cr->get_ID() != id_tinta) continue;
 
-        const std::string msg = "rezidential ID=" + std::to_string(id_tinta);
+        // Verificare usoara cu pointeri - NU incarca stiva
+        bool is_casa_old = (dynamic_cast<Casa*>(cr.get()) != nullptr);
+        bool is_casa_new = (dynamic_cast<Casa*>(date_noi.get()) != nullptr);
 
-        try {
-            try {
-                (void)dynamic_cast<Casa&>(*cr);
-                (void)dynamic_cast<Casa&>(*date_noi);
-            } catch (const std::bad_cast&) {
-                try {
-                    (void)dynamic_cast<Bloc&>(*cr);
-                    (void)dynamic_cast<Bloc&>(*date_noi);
-                } catch (const std::bad_cast&) {
-                    throw ExceptieTipIncompatibil(msg);
-                }
-            }
-        } catch (const ExceptieOras&) {
-            throw;
+        bool is_bloc_old = (dynamic_cast<Bloc*>(cr.get()) != nullptr);
+        bool is_bloc_new = (dynamic_cast<Bloc*>(date_noi.get()) != nullptr);
+
+        // Validare compatibilitate
+        if (is_casa_old && !is_casa_new) {
+            throw ExceptieTipIncompatibil("Nu poti inlocui Casa cu altceva (ID=" + std::to_string(id_tinta) + ")");
+        }
+        if (is_bloc_old && !is_bloc_new) {
+            throw ExceptieTipIncompatibil("Nu poti inlocui Bloc cu altceva (ID=" + std::to_string(id_tinta) + ")");
         }
 
+        // Daca tipurile coincid, facem schimbul
         cr = std::move(date_noi);
         return true;
     }
@@ -179,44 +177,51 @@ bool Zona::modifica_publica(int id_tinta, std::unique_ptr<CladirePublica> date_n
     if (!date_noi) throw ExceptieDateInvalide("modifica_publica: date_noi null");
 
     for (auto& cp : cladiri_publice) {
-        if (!cp || cp->get_ID() != id_tinta) continue;
+        if (cp->get_ID() != id_tinta) continue;
 
-        const std::string msg = "public ID=" + std::to_string(id_tinta);
+        // Folosim pointeri raw pentru verificare rapida de tip
+        CladirePublica* old_ptr = cp.get();
+        CladirePublica* new_ptr = date_noi.get();
 
-        try {
-            (void)dynamic_cast<CladireServicii&>(*cp);
-            (void)dynamic_cast<CladireServicii&>(*date_noi);
-        } catch (const std::bad_cast&) {
-            try {
-                (void)dynamic_cast<CladireEducatie&>(*cp);
-                (void)dynamic_cast<CladireEducatie&>(*date_noi);
-            } catch (const std::bad_cast&) {
-                try {
-                    (void)dynamic_cast<SpatiuVerde&>(*cp);
-                    (void)dynamic_cast<SpatiuVerde&>(*date_noi);
-                } catch (const std::bad_cast&) {
-                    try {
-                        // DACA AI: Fabrica : public CladireEconomie
-                        (void)dynamic_cast<Fabrica&>(*cp);
-                        (void)dynamic_cast<Fabrica&>(*date_noi);
-                    } catch (const std::bad_cast&) {
-                        try {
-                            // DACA AI: SpatiuComercial : public CladireEconomie
-                            (void)dynamic_cast<SpatiuComercial&>(*cp);
-                            (void)dynamic_cast<SpatiuComercial&>(*date_noi);
-                        } catch (const std::bad_cast&) {
-                            try {
-                                (void)dynamic_cast<CladireAdministrativa&>(*cp);
-                                (void)dynamic_cast<CladireAdministrativa&>(*date_noi);
-                            } catch (const std::bad_cast&) {
-                                throw ExceptieTipIncompatibil(msg);
-                            }
-                        }
-                    }
-                }
-            }
+        // Verificam ierarhiile de jos in sus (de la specific la general)
+
+        // 1. Servicii
+        if (dynamic_cast<CladireServicii*>(old_ptr)) {
+            if (!dynamic_cast<CladireServicii*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat CladireServicii");
+        }
+        // 2. Administrativa (Generic, dar nu Servicii - daca a trecut de if-ul de mai sus)
+        else if (dynamic_cast<CladireAdministrativa*>(old_ptr)) {
+            if (!dynamic_cast<CladireAdministrativa*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat CladireAdministrativa");
+        }
+        // 3. Fabrica
+        else if (dynamic_cast<Fabrica*>(old_ptr)) {
+            if (!dynamic_cast<Fabrica*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat Fabrica");
+        }
+        // 4. Spatiu Comercial
+        else if (dynamic_cast<SpatiuComercial*>(old_ptr)) {
+            if (!dynamic_cast<SpatiuComercial*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat SpatiuComercial");
+        }
+        // 5. Economie (Generic)
+        else if (dynamic_cast<CladireEconomie*>(old_ptr)) {
+            if (!dynamic_cast<CladireEconomie*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat CladireEconomie");
+        }
+        // 6. Educatie
+        else if (dynamic_cast<CladireEducatie*>(old_ptr)) {
+            if (!dynamic_cast<CladireEducatie*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat CladireEducatie");
+        }
+        // 7. Spatiu Verde
+        else if (dynamic_cast<SpatiuVerde*>(old_ptr)) {
+            if (!dynamic_cast<SpatiuVerde*>(new_ptr))
+                throw ExceptieTipIncompatibil("Incompatibilitate: Asteptat SpatiuVerde");
         }
 
+        // Daca a trecut de verificari, mutam
         cp = std::move(date_noi);
         return true;
     }

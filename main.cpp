@@ -169,18 +169,18 @@ int main() {
             o.implementare_proiect_public(p, std::move(fab2), "Nord");
         }
 
-        // title("13) IMBUNATATIRE incompatibila: incerci Bloc cu ID=1 peste Casa -> ExceptieTipIncompatibil");
-        // {
-        //     Proiect p("Upgrade gresit", Proiecte::REZIDENTIAL, Amanunte::IMBUNATATIRE, 100);
-        //     auto bloc_bad = std::make_unique<Bloc>(1);
-        //
-        //     try {
-        //         o.implementare_proiect_rezidential(p, std::move(bloc_bad), "Centru");
-        //         std::cout << "EROARE: trebuia ExceptieTipIncompatibil.\n";
-        //     } catch (const ExceptieOras& e) {
-        //         std::cout << "OK (asteptat) -> " << e.what() << "\n";
-        //     }
-        // }
+        title("13) IMBUNATATIRE incompatibila: incerci Bloc cu ID=1 peste Casa -> ExceptieTipIncompatibil");
+        {
+            Proiect p("Upgrade gresit", Proiecte::REZIDENTIAL, Amanunte::IMBUNATATIRE, 100);
+            auto bloc_bad = std::make_unique<Bloc>(1);
+
+            try {
+                o.implementare_proiect_rezidential(p, std::move(bloc_bad), "Centru");
+                std::cout << "EROARE: trebuia ExceptieTipIncompatibil.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
 
         title("14) DEMOLARE: Bloc (ID=2, Nord)");
         {
@@ -210,31 +210,31 @@ int main() {
             o.implementare_proiect_public(p, std::move(dummy), "Centru");
         }
 
-        // title("18) EXCEPTIE: Buget insuficient");
-        // {
-        //     Proiect p("Proiect scump", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 999999);
-        //     auto dummy = std::make_unique<CladireEconomie>(100);
-        //
-        //     try {
-        //         o.implementare_proiect_public(p, std::move(dummy), "Centru");
-        //         std::cout << "EROARE: trebuia ExceptieBugetInsuficient.\n";
-        //     } catch (const ExceptieOras& e) {
-        //         std::cout << "OK (asteptat) -> " << e.what() << "\n";
-        //     }
-        // }
+        title("18) EXCEPTIE: Buget insuficient");
+        {
+            Proiect p("Proiect scump", Proiecte::PUBLIC, Amanunte::DE_LA_ZERO, 999999);
+            auto dummy = std::make_unique<CladireEconomie>(100);
 
-        // title("19) EXCEPTIE: Zona inexistenta");
-        // {
-        //     Proiect p("Zona inexistenta", Proiecte::REZIDENTIAL, Amanunte::DE_LA_ZERO, 10);
-        //     auto dummy = std::make_unique<Casa>(200);
-        //
-        //     try {
-        //         o.implementare_proiect_rezidential(p, std::move(dummy), "NU_EXISTA");
-        //         std::cout << "EROARE: trebuia ExceptieZonaInexistenta.\n";
-        //     } catch (const ExceptieOras& e) {
-        //         std::cout << "OK (asteptat) -> " << e.what() << "\n";
-        //     }
-        // }
+            try {
+                o.implementare_proiect_public(p, std::move(dummy), "Centru");
+                std::cout << "EROARE: trebuia ExceptieBugetInsuficient.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
+
+        title("19) EXCEPTIE: Zona inexistenta");
+        {
+            Proiect p("Zona inexistenta", Proiecte::REZIDENTIAL, Amanunte::DE_LA_ZERO, 10);
+            auto dummy = std::make_unique<Casa>(200);
+
+            try {
+                o.implementare_proiect_rezidential(p, std::move(dummy), "NU_EXISTA");
+                std::cout << "EROARE: trebuia ExceptieZonaInexistenta.\n";
+            } catch (const ExceptieOras& e) {
+                std::cout << "OK (asteptat) -> " << e.what() << "\n";
+            }
+        }
 
         title("20) sterge zona (ca sa fie folosita Oras::sterge_zona)");
         {
@@ -242,9 +242,9 @@ int main() {
             std::cout << (ok ? "OK: Nord stearsa.\n" : "NU: Nord nu exista.\n");
         }
 
-        // title("21) SIMULARE + RAPORT FINAL");
-        // o.simulare_luna();
-        // std::cout << o;
+        title("21) SIMULARE + RAPORT FINAL");
+        o.simulare_luna();
+        std::cout << o;
 
     } catch (const ExceptieOras& e) {
         std::cout << "Exceptie Oras (neprinsa intern): " << e.what() << "\n";
