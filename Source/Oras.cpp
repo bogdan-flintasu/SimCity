@@ -30,7 +30,6 @@ const Zona* Oras::cautare_zona(const std::string& nume) const{
 
 Oras::Oras(std::string nume, const double buget, const double fericire_init): nume_oras(std::move(nume)), buget_curent(buget), indice_fericire(fericire_init) {}
 
-Oras::Oras(const Oras& other) = default;
 
 void swap(Oras& a, Oras& b) noexcept {
     using std::swap;
@@ -39,14 +38,6 @@ void swap(Oras& a, Oras& b) noexcept {
     swap(a.indice_fericire, b.indice_fericire);
     swap(a.zone, b.zone);
 }
-
-Oras& Oras::operator=(Oras other) {
-    swap(*this, other);
-    return *this;
-}
-
-
-Oras::~Oras() = default;
 
 void Oras::adauga_zona(Zona z) { zone.push_back(std::move(z)); }
 

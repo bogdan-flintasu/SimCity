@@ -26,13 +26,13 @@ public:
 
     explicit Oras(std::string nume = "", double buget = 0.0, double fericire_init = 0.5);
 
-    Oras(const Oras& other);
-    Oras& operator=(Oras other);
+    Oras(const Oras& other) = default;
+    Oras& operator=(Oras& other) = default;
 
     Oras(Oras&& other) noexcept = default;
     Oras& operator=(Oras&& other) noexcept = default;
 
-    ~Oras();
+    ~Oras() = default;
 
     friend void swap(Oras& a, Oras& b) noexcept;
 
