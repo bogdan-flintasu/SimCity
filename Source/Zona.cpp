@@ -3,11 +3,19 @@
 //
 
 #include <string>
-#include <iostream>
 #include <utility>
 
 #include "../Headers/Zona.h"
 #include "../Headers/ExceptieOras.h"
+#include "../Headers/Casa.h"
+#include "../Headers/Bloc.h"
+#include "../Headers/CladireAdministrativa.h"
+#include "../Headers/CladireServicii.h"
+#include "../Headers/CladireEconomie.h"
+#include "../Headers/CladireEducatie.h"
+#include "../Headers/SpatiuVerde.h"
+#include "../Headers/Fabrica.h"
+#include "../Headers/SpatiuComercial.h"
 
 Zona::Zona(std::string  nume) : nume_zona(std::move(nume)) {}
 
@@ -72,30 +80,34 @@ int Zona::calcul_numar_masini_zona() const {
     return nr_locuitori / 2;
 }
 
+#include <iostream>
+
 double Zona::calcul_incasari_zona() const {
     double total = 0.0;
 
     for (const auto& cr : cladiri_rezidentiale) {
-        const std::string_view tip = cr->tip_cladire();
-        if (tip == "Casa")
-            total += cr->get_numar_locuitori() * 15.0;
-        else if (tip == "Bloc")
-            total += cr->get_numar_locuitori() * 10.0;
+        const double v = cr->incasari_lunare();
+        std::cout << "[INCASARI REZ] ID=" << cr->get_ID() << " v=" << v << "\n";
+        total += v;
     }
 
     for (const auto& cp : cladiri_publice) {
-        total += cp->incasari();
+        const double v = cp->incasari();
+        std::cout << "[INCASARI PUB] ID=" << cp->get_ID() << " v=" << v << "\n";
+        total += v;
     }
 
     for (const Strada& s : strazi) {
         double taxa = s.get_numar_benzi() * 7.0 * s.get_lungime() * 0.5;
-        if (!s.get_sens_unic())
-            taxa *= 2.0;
+        if (!s.get_sens_unic()) taxa *= 2.0;
+        std::cout << "[TAXA STR] ID=" << s.get_ID() << " taxa=" << taxa << "\n";
         total += taxa;
     }
 
+    std::cout << "[INCASARI ZONA TOTAL] " << total << "\n";
     return total;
 }
+
 
 bool Zona::stergere_strada(int id_tinta) {
     for (auto it = strazi.begin(); it != strazi.end(); ++it) {
@@ -138,17 +150,27 @@ bool Zona::modifica_strada(int id_tinta, const Strada &date_noi) {
 }
 
 bool Zona::modifica_rezidentiala(int id_tinta, std::unique_ptr<CladireRezidentiala> date_noi) {
-    for (auto& cr : cladiri_rezidentiale) {
-        if (cr->get_ID() != id_tinta) continue;
+    if (!date_noi) throw ExceptieDateInvalide("modifica_rezidentiala: date_noi null");
 
-        if (dynamic_cast<Casa*>(cr.get())) {
-            if (!dynamic_cast<Casa*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("rezidential ID=" + std::to_string(id_tinta));
-        } else if (dynamic_cast<Bloc*>(cr.get())) {
-            if (!dynamic_cast<Bloc*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("rezidential ID=" + std::to_string(id_tinta));
-        } else {
-            throw ExceptieTipIncompatibil("rezidential ID=" + std::to_string(id_tinta));
+    for (auto& cr : cladiri_rezidentiale) {
+        if (!cr || cr->get_ID() != id_tinta) continue;
+
+        const std::string msg = "rezidential ID=" + std::to_string(id_tinta);
+
+        try {
+            try {
+                (void)dynamic_cast<Casa&>(*cr);
+                (void)dynamic_cast<Casa&>(*date_noi);
+            } catch (const std::bad_cast&) {
+                try {
+                    (void)dynamic_cast<Bloc&>(*cr);
+                    (void)dynamic_cast<Bloc&>(*date_noi);
+                } catch (const std::bad_cast&) {
+                    throw ExceptieTipIncompatibil(msg);
+                }
+            }
+        } catch (const ExceptieOras&) {
+            throw;
         }
 
         cr = std::move(date_noi);
@@ -159,26 +181,48 @@ bool Zona::modifica_rezidentiala(int id_tinta, std::unique_ptr<CladireRezidentia
 
 
 
-bool Zona::modifica_publica(int id_tinta, std::unique_ptr<CladirePublica> date_noi) {
-    for (auto& cp : cladiri_publice) {
-        if (cp->get_ID() != id_tinta) continue;
 
-        if (dynamic_cast<CladireServicii*>(cp.get())) {
-            if (!dynamic_cast<CladireServicii*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
-        } else if (dynamic_cast<CladireEducatie*>(cp.get())) {
-            if (!dynamic_cast<CladireEducatie*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
-        } else if (dynamic_cast<SpatiuVerde*>(cp.get())) {
-            if (!dynamic_cast<SpatiuVerde*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
-        } else if (dynamic_cast<CladireAdministrativa*>(cp.get())) {
-            if (!dynamic_cast<CladireAdministrativa*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
-            if (dynamic_cast<CladireServicii*>(date_noi.get()))
-                throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
-        } else {
-            throw ExceptieTipIncompatibil("public ID=" + std::to_string(id_tinta));
+
+bool Zona::modifica_publica(int id_tinta, std::unique_ptr<CladirePublica> date_noi) {
+    if (!date_noi) throw ExceptieDateInvalide("modifica_publica: date_noi null");
+
+    for (auto& cp : cladiri_publice) {
+        if (!cp || cp->get_ID() != id_tinta) continue;
+
+        const std::string msg = "public ID=" + std::to_string(id_tinta);
+
+        try {
+            (void)dynamic_cast<CladireServicii&>(*cp);
+            (void)dynamic_cast<CladireServicii&>(*date_noi);
+        } catch (const std::bad_cast&) {
+            try {
+                (void)dynamic_cast<CladireEducatie&>(*cp);
+                (void)dynamic_cast<CladireEducatie&>(*date_noi);
+            } catch (const std::bad_cast&) {
+                try {
+                    (void)dynamic_cast<SpatiuVerde&>(*cp);
+                    (void)dynamic_cast<SpatiuVerde&>(*date_noi);
+                } catch (const std::bad_cast&) {
+                    try {
+                        // DACA AI: Fabrica : public CladireEconomie
+                        (void)dynamic_cast<Fabrica&>(*cp);
+                        (void)dynamic_cast<Fabrica&>(*date_noi);
+                    } catch (const std::bad_cast&) {
+                        try {
+                            // DACA AI: SpatiuComercial : public CladireEconomie
+                            (void)dynamic_cast<SpatiuComercial&>(*cp);
+                            (void)dynamic_cast<SpatiuComercial&>(*date_noi);
+                        } catch (const std::bad_cast&) {
+                            try {
+                                (void)dynamic_cast<CladireAdministrativa&>(*cp);
+                                (void)dynamic_cast<CladireAdministrativa&>(*date_noi);
+                            } catch (const std::bad_cast&) {
+                                throw ExceptieTipIncompatibil(msg);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         cp = std::move(date_noi);
@@ -186,6 +230,7 @@ bool Zona::modifica_publica(int id_tinta, std::unique_ptr<CladirePublica> date_n
     }
     return false;
 }
+
 
 
 

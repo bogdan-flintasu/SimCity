@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.26)
 set(MAIN_PROJECT_NAME "oop")
 set(MAIN_EXECUTABLE_NAME "${MAIN_PROJECT_NAME}")
 
+
 project(${MAIN_PROJECT_NAME})
 # set(CMAKE_PROJECT_VERSION_MAJOR 0)
 # set(CMAKE_PROJECT_VERSION_MINOR 0)
@@ -19,22 +20,30 @@ include(cmake/CompilerFlags.cmake)
 include(cmake/CopyHelper.cmake)
 
 ###############################################################################
-# external dependencies with FetchContent (optional)
+
+# external dependencies with FetchContent
 # include(FetchContent)
 #
 # set(FETCHCONTENT_QUIET OFF)
 # set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 #
+# NOTE: Also update env vars used for caching in
+#         - .github/actions/configure-cmake/action.yml
+#         - .github/workflows/cmake.yml
 # FetchContent_Declare(
-#         SFML
-#         GIT_REPOSITORY https://github.com/SFML/SFML.git
-#         GIT_TAG        2.6.1
+#         SomeLib
+#         GIT_REPOSITORY https://github.com/<SomeUser>/<SomeLib>.git
+#         GIT_TAG        <some_git_hash> # <which tag/branch @ <some_date>>
+#         GIT_SHALLOW    1  # works only with branches or tags, not with arbitrary commit hashes
 # )
-# FetchContent_MakeAvailable(SFML)
+#
+# FetchContent_MakeAvailable(SomeLib)
 
 ###############################################################################
-# external dependencies with find_package (recommended)
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+
+# external dependencies with find_package
+
+# find_package(Threads REQUIRED)
 
 ###############################################################################
 
@@ -42,36 +51,42 @@ find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 add_executable(${MAIN_EXECUTABLE_NAME}
         main.cpp
 
-        # --- SFML UI ---
-        src/ui/App.cpp
-        src/ui/Button.cpp
-        src/ui/TextInput.cpp
-
-        # --- your sources ---
         Source/Oras.cpp
         Source/Zona.cpp
         Source/Strada.cpp
         Source/Proiect.cpp
         Source/CladirePublica.cpp
         Source/CladireRezidentiala.cpp
+        Source/Bloc.cpp
+        Source/Casa.cpp
+        Source/CladireAdministrativa.cpp
+        Source/CladireServicii.cpp
+        Source/CladireEducatie.cpp
+        Source/CladireEconomie.cpp
+        Source/SpatiuVerde.cpp
+        Source/Apartament.cpp
+        Source/Fabrica.cpp
+        Source/Fabrica.cpp
+        Headers/SpatiuComercial.h
+        Source/SpatiuComercial.cpp
 )
 
-target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC
-        ${CMAKE_SOURCE_DIR}/Headers
-        ${CMAKE_SOURCE_DIR}/src
-)
-
-# Link SFML (works for typical SFML installs)
-# Some installs expose SFML::graphics targets, others expose sfml-graphics libs.
-if (TARGET SFML::graphics)
-    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::graphics SFML::window SFML::system)
-else()
-    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE sfml-graphics sfml-window sfml-system)
-endif()
+target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/Headers)
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
 set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
+# set_compiler_flags(TARGET_NAMES ${MAIN_EXECUTABLE_NAME} ${FOO} ${BAR})
+# where ${FOO} and ${BAR} represent additional executables or libraries
+# you want to compile with the set compiler flags
+
+###############################################################################
+
+# use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
+# target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
+# target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
+# target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
+# target_link_libraries(${MAIN_EXECUTABLE_NAME} <SomeLib>)
 
 ###############################################################################
 
@@ -83,9 +98,5 @@ if(APPLE)
 endif()
 
 copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
-
-# SFML assets (font)
-copy_files(FILES assets/arial.ttf COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
-
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})

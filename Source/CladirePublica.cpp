@@ -14,13 +14,12 @@ int CladirePublica::gen_id() {
 
 void CladirePublica::reset_id(int start) { next_id = start; }
 
-CladirePublica::CladirePublica(const int id, std::string  n, const double cost_c, const double cost_i, const int capacitate, const bool inchiriat_, const double taxe): ID(id), nume(std::move(n)), cost_construire(cost_c), cost_intretinere(cost_i),
-                                                                                                                capacitate_servicii(capacitate), inchiriat(inchiriat_), taxe_lunare(taxe) {
+CladirePublica::CladirePublica(const int id, std::string  n, const double cost_c, const double cost_i, const int capacitate, const bool inchiriat_): ID(id), nume(std::move(n)), cost_construire(cost_c), cost_intretinere(cost_i),
+                                                                                                                capacitate_servicii(capacitate), inchiriat(inchiriat_) {
     if (ID < 0) throw ExceptieDateInvalide("CladirePublica: ID negativ");
     if (cost_construire < 0.0) throw ExceptieDateInvalide("CladirePublica: cost_construire negativ");
     if (cost_intretinere < 0.0) throw ExceptieDateInvalide("CladirePublica: cost_intretinere negativ");
     if (capacitate_servicii < 0) throw ExceptieDateInvalide("CladirePublica: capacitate negativa");
-    if (taxe_lunare < 0.0) throw ExceptieDateInvalide("CladirePublica: taxe_lunare negative");
 
     if (id > 0 && id >= next_id) next_id = id + 1;
 }
@@ -47,7 +46,6 @@ double CladirePublica::get_cost_intretinere() const { return cost_intretinere; }
 const std::string& CladirePublica::get_nume() const { return nume; }
 int CladirePublica::get_capacitate() const { return capacitate_servicii; }
 bool CladirePublica::get_inchiriat() const { return inchiriat; }
-double CladirePublica::incasari() const { return taxe_lunare; }
 
 void CladirePublica::print(std::ostream& os) const {
     os << "ID=" << ID
@@ -57,7 +55,7 @@ void CladirePublica::print(std::ostream& os) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const CladirePublica& cp) {
-    os << cp.tip_cladire() << " { ";
+    os << " { ";
     cp.print(os);
     os << " }";
     return os;

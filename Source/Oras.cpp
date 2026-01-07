@@ -4,7 +4,8 @@
 
 #include <iostream>
 #include <algorithm>
-#include <string_view>
+#include "Clamp.h"
+
 
 #include "../Headers/Oras.h"
 #include "../Headers/ExceptieOras.h"
@@ -76,28 +77,7 @@ int Oras::calcul_numar_total_masini() const {
 double Oras::get_buget() const { return buget_curent; }
 double Oras::get_fericire() const { return indice_fericire; }
 
-static double calcul_fericire(std::string_view tip, Amanunte actiune) {
-    if (actiune == Amanunte::DE_LA_ZERO) {
-        if (tip == "CladireEconomie") return 0.08;
-        if (tip == "SpatiuVerde") return 0.05;
-        if (tip == "CladireServicii") return 0.07;
-        if (tip == "CladireEducatie") return 0.02;
-        if (tip == "CladireAdministrativa") return 0.02;
-    } else if (actiune == Amanunte::IMBUNATATIRE) {
-        if (tip == "CladireEconomie") return 0.05;
-        if (tip == "SpatiuVerde") return 0.02;
-        if (tip == "CladireServicii") return 0.06;
-        if (tip == "CladireEducatie") return 0.02;
-        if (tip == "CladireAdministrativa") return 0.02;
-    } else if (actiune == Amanunte::DEMOLARE) {
-        if (tip == "CladireEconomie") return -0.10;
-        if (tip == "SpatiuVerde") return -0.07;
-        if (tip == "CladireServicii") return -0.08;
-        if (tip == "CladireEducatie") return -0.04;
-        if (tip == "CladireAdministrativa") return -0.01;
-    }
-    return 0.0;
-}
+
 
 bool Oras::implementare_proiect_stradal(const Proiect& p, const Strada& s, const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::STRADA) return false;
@@ -143,140 +123,124 @@ bool Oras::implementare_proiect_stradal(const Proiect& p, const Strada& s, const
 }
 
 
-bool Oras::implementare_proiect_rezidential(const Proiect& p, std::unique_ptr<CladireRezidentiala> cr, const std::string& nume_zona_proiect) {
+bool Oras::implementare_proiect_rezidential(const Proiect& p,
+                                            std::unique_ptr<CladireRezidentiala> cr,
+                                            const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::REZIDENTIAL) return false;
 
     if (buget_curent < p.get_cost_estimat())
         throw ExceptieBugetInsuficient(buget_curent, p.get_cost_estimat());
 
     Zona* zona_tinta = cautare_zona(nume_zona_proiect);
-    if (zona_tinta == nullptr)
+    if (!zona_tinta)
         throw ExceptieZonaInexistenta(nume_zona_proiect);
 
     if (!cr)
-        throw ExceptieDateInvalide("cladire rezidentiala null");
+        throw ExceptieDateInvalide("implementare_proiect_rezidential: cr null");
 
-    Amanunte actiune = p.get_detalii();
-
+    const Amanunte actiune = p.get_detalii();
     const int id_tinta = cr->get_ID();
-    const std::string_view tip = cr->tip_cladire();
+
+    const double delta = cr->impact_fericire(actiune);
 
     buget_curent -= p.get_cost_estimat();
-    bool succes = false;
 
-    if (actiune == Amanunte::DEMOLARE) {
-        if (zona_tinta->stergere_rezidentiala(id_tinta)) {
-            if (tip == "Casa")
-                indice_fericire = std::max(0.0, indice_fericire - 0.01);
-            else
-                indice_fericire = std::max(0.0, indice_fericire - 0.05);
-            succes = true;
-        } else {
+    if (actiune == Amanunte::DE_LA_ZERO) {
+        zona_tinta->adauga_cladire_rezidentiala(std::move(cr));
+        indice_fericire = clamp01(indice_fericire + delta);
+        std::cout << "SUCCES: Proiect rezidential '" << amtostr(actiune) << "' finalizat.\n";
+        return true;
+    }
+
+    if (actiune == Amanunte::IMBUNATATIRE) {
+        if (!zona_tinta->modifica_rezidentiala(id_tinta, std::move(cr))) {
             buget_curent += p.get_cost_estimat();
             throw ExceptieIDInexistent(id_tinta);
         }
-    }
-    else if (actiune == Amanunte::IMBUNATATIRE) {
-        try {
-            if (zona_tinta->modifica_rezidentiala(id_tinta, std::move(cr))) {
-                if (tip == "Casa")
-                    indice_fericire = std::min(1.0, indice_fericire + 0.01);
-                else
-                    indice_fericire = std::min(1.0, indice_fericire + 0.04);
-                succes = true;
-            } else {
-                buget_curent += p.get_cost_estimat();
-                throw ExceptieIDInexistent(id_tinta);
-            }
-        } catch (...) {
-            buget_curent += p.get_cost_estimat();
-            throw;
-        }
-    }
-    else {
-        zona_tinta->adauga_cladire_rezidentiala(std::move(cr));
-        if (tip == "Casa")
-            indice_fericire = std::min(1.0, indice_fericire + 0.02);
-        else
-            indice_fericire = std::min(1.0, indice_fericire + 0.04);
-        succes = true;
+        indice_fericire = clamp01(indice_fericire + delta);
+        std::cout << "SUCCES: Proiect rezidential '" << amtostr(actiune) << "' finalizat.\n";
+        return true;
     }
 
+    if (!zona_tinta->stergere_rezidentiala(id_tinta)) {
+        buget_curent += p.get_cost_estimat();
+        throw ExceptieIDInexistent(id_tinta);
+    }
+    indice_fericire = clamp01(indice_fericire + delta);
     std::cout << "SUCCES: Proiect rezidential '" << amtostr(actiune) << "' finalizat.\n";
-    return succes;
+    return true;
 }
 
 
-
-bool Oras::implementare_proiect_public(const Proiect& p, std::unique_ptr<CladirePublica> cp, const std::string& nume_zona_proiect) {
+bool Oras::implementare_proiect_public(const Proiect& p,
+                                       std::unique_ptr<CladirePublica> cp,
+                                       const std::string& nume_zona_proiect) {
     if (p.get_tip() != Proiecte::PUBLIC) return false;
 
     if (buget_curent < p.get_cost_estimat())
         throw ExceptieBugetInsuficient(buget_curent, p.get_cost_estimat());
 
     Zona* zona_tinta = cautare_zona(nume_zona_proiect);
-    if (zona_tinta == nullptr)
+    if (!zona_tinta)
         throw ExceptieZonaInexistenta(nume_zona_proiect);
 
     if (!cp)
-        throw ExceptieDateInvalide("cladire publica null");
+        throw ExceptieDateInvalide("implementare_proiect_public: cp null");
 
-    Amanunte actiune = p.get_detalii();
-
+    const Amanunte actiune = p.get_detalii();
     const int id_tinta = cp->get_ID();
-    const std::string_view tip = cp->tip_cladire();
+
+    const double delta = cp->impact_fericire(actiune);
 
     buget_curent -= p.get_cost_estimat();
-    bool succes = false;
 
-    if (actiune == Amanunte::DEMOLARE) {
-        if (zona_tinta->stergere_publica(id_tinta)) {
-            succes = true;
-        } else {
+    if (actiune == Amanunte::DE_LA_ZERO) {
+        zona_tinta->adauga_cladire_publica(std::move(cp));
+        indice_fericire = clamp01(indice_fericire + delta);
+        std::cout << "SUCCES: Proiect public '" << amtostr(actiune) << "' finalizat.\n";
+        return true;
+    }
+
+    if (actiune == Amanunte::IMBUNATATIRE) {
+        if (!zona_tinta->modifica_publica(id_tinta, std::move(cp))) {
             buget_curent += p.get_cost_estimat();
             throw ExceptieIDInexistent(id_tinta);
         }
-    }
-    else if (actiune == Amanunte::IMBUNATATIRE) {
-        try {
-            if (zona_tinta->modifica_publica(id_tinta, std::move(cp))) {
-                succes = true;
-            } else {
-                buget_curent += p.get_cost_estimat();
-                throw ExceptieIDInexistent(id_tinta);
-            }
-        } catch (...) {
-            buget_curent += p.get_cost_estimat();
-            throw;
-        }
-    }
-    else {
-        zona_tinta->adauga_cladire_publica(std::move(cp));
-        succes = true;
+        indice_fericire = clamp01(indice_fericire + delta);
+        std::cout << "SUCCES: Proiect public '" << amtostr(actiune) << "' finalizat.\n";
+        return true;
     }
 
+    if (!zona_tinta->stergere_publica(id_tinta)) {
+        buget_curent += p.get_cost_estimat();
+        throw ExceptieIDInexistent(id_tinta);
+    }
+    indice_fericire = clamp01(indice_fericire + delta);
     std::cout << "SUCCES: Proiect public '" << amtostr(actiune) << "' finalizat.\n";
-    indice_fericire += calcul_fericire(tip, actiune);
-    indice_fericire = std::min(1.0, std::max(0.0, indice_fericire));
-
-    return succes;
+    return true;
 }
+
 
 
 
 void Oras::simulare_luna() {
     std::cout << "\n>>> SIMULARE LUNA... <<<\n";
-    double cost_lunar = calcul_cost_intretinere_total();
-    double venit_lunar = calcul_incasari_totale();
+    const double cost_lunar = calcul_cost_intretinere_total();
+    const double venit_lunar = calcul_incasari_totale();
+
     std::cout << "Cost intretinere lunar: " << cost_lunar << " RON\n";
     std::cout << "Venit lunar (taxe+chirii): " << venit_lunar << " RON\n";
-    double sold = venit_lunar - cost_lunar;
+
+    const double sold = venit_lunar - cost_lunar;
     buget_curent += sold;
 
-    if (buget_curent < 0) indice_fericire = std::max(0.0, indice_fericire - 0.05);
-    else if (sold < 0) indice_fericire = std::max(0.0, indice_fericire - 0.01);
-    else indice_fericire = std::min(1.0, indice_fericire + 0.01);
-    std::cout << "Sold lunar: " << sold << " RON.\nBuget nou: " << buget_curent << " RON.\nFericire noua: " << (indice_fericire*100) << "%\n";
+    if (buget_curent < 0) indice_fericire = clamp01(indice_fericire - 0.05);
+    else if (sold < 0)    indice_fericire = clamp01(indice_fericire - 0.01);
+    else                  indice_fericire = clamp01(indice_fericire + 0.01);
+
+    std::cout << "Sold lunar: " << sold
+              << " RON.\nBuget nou: " << buget_curent
+              << " RON.\nFericire noua: " << (indice_fericire * 100) << "%\n";
 }
 
 const std::vector<Zona>& Oras::get_zone() const {
