@@ -244,7 +244,7 @@ int main() {
 
         title("21) SIMULARE + RAPORT FINAL");
         o.simulare_luna();
-        //std::cout << o;
+        std::cout << o;
 
     } catch (const ExceptieOras& e) {
         std::cout << "Exceptie Oras (neprinsa intern): " << e.what() << "\n";
