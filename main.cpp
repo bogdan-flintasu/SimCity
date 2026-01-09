@@ -23,7 +23,6 @@ static void title(const char* s) {
 }
 
 int main() {
-    // Mesaj de control sa vedem ca porneste
     std::cout << "DEBUG: START PROGRAM..." << std::endl;
 
     try {
