@@ -19,7 +19,6 @@
 #include "Headers/Strada.h"
 
 static void title(const char* s) {
-    // Putem lasa cout aici, dar daca tot crapa, comenteaza linia de mai jos
     std::cout << "\n==================== " << s << " ====================\n";
 }
 
@@ -30,8 +29,6 @@ int main() {
     try {
         Strada::reset_id(1);
 
-        // --- SCHIMBARE CRITICA PENTRU STACK OVERFLOW ---
-        // Alocam Orasul pe HEAP (memorie mare), nu pe STIVA (memorie mica)
         auto o = std::make_unique<Oras>("Bucuresti", 20000.0, 0.50);
 
         o->adauga_zona(Zona("Centru"));
@@ -45,7 +42,6 @@ int main() {
             Strada s1(1, "Bd. Unirii",       1.5, 2.0,  true,  false, 2, 300.0);
             Strada s2(2, "Str. Aviatorilor", 2.2, 3.0,  true,  true,  3, 350.0);
 
-            // Folosim operatorul -> pentru ca 'o' este pointer
             o->implementare_proiect_stradal(pS1, s1, "Centru");
             o->implementare_proiect_stradal(pS2, s2, "Nord");
         }
@@ -253,7 +249,6 @@ int main() {
         title("21) SIMULARE + RAPORT FINAL");
         o->simulare_luna();
 
-        // Dereferentiem pointerul (*o) pentru a-l afisa
         std::cout << *o << std::endl;
 
     } catch (const ExceptieOras& e) {
