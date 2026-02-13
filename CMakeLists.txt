@@ -21,6 +21,10 @@ include(cmake/CopyHelper.cmake)
 
 ###############################################################################
 
+set(SFML_BUILD_SHARED_LIBS OFF CACHE BOOL "Build static SFML" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
+add_definitions(-DSFML_STATIC)
+
 # external dependencies with FetchContent
 
 include(FetchContent)
@@ -74,9 +78,19 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Source/SpatiuVerde.cpp
         Source/Apartament.cpp
         Source/Fabrica.cpp
-        Source/Fabrica.cpp
-        Headers/SpatiuComercial.h
         Source/SpatiuComercial.cpp
+        UI/UI.cpp
+        UI/Button.cpp
+        UI/SideMenu.cpp
+        UI/Form.cpp
+        UI/Pages/EditPage.cpp
+        UI/Pages/ProjectPage.cpp
+        UI/Pages/MainMenuPage.h
+        UI/Pages/MainMenuPage.cpp
+        UI/GameSession.h
+        UI/GameSession.cpp
+        Headers/ChallangeManager.h
+        Headers/TrackerProgres.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -90,13 +104,22 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
-target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
+target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE
+        Headers
+        UI
+        Source
+        ${SFML_SOURCE_DIR}/include
+)
 target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${SFML_BINARY_DIR}/lib)
 target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics SFML::Window SFML::System Threads::Threads)
 
 if(APPLE)
 elseif(UNIX)
     target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE X11)
+endif()
+
+if(WIN32)
+    target_link_options(${MAIN_EXECUTABLE_NAME} PRIVATE -static -Wl,--allow-multiple-definition)
 endif()
 
 ###############################################################################
@@ -112,3 +135,4 @@ endif()
 copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

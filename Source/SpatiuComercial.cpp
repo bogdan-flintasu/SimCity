@@ -68,7 +68,6 @@ double SpatiuComercial::impact_fericire(const Amanunte actiune) const {
     score += 0.25 * eff;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.050 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.025 * score;
     return -0.060 * (0.6 + 0.4 * score);
 }
 

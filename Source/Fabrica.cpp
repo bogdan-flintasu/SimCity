@@ -53,7 +53,6 @@ double Fabrica::impact_fericire(const Amanunte actiune) const {
     score += 0.15 * cap;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.030 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.015 * score;
     return -0.070 * (0.6 + 0.4 * score);
 }
 

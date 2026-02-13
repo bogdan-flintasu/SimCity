@@ -10,24 +10,33 @@
 
 #include "Proiect.h"
 #include "Zona.h"
+#include "../Headers/TrackerProgres.h"
 
 class Oras {
 private:
     std::string nume_oras;
+    int luni_mandat;
+    int luni_consecutive_excelenta;
+    int stare_joc;
     double buget_curent;
     double indice_fericire;
+    double buget_initial;
+    double fericire_initiala;
     std::vector<Zona> zone;
-
-    Zona* cautare_zona(const std::string& nume);
+    int luni_fara_proiect;
+    bool proiect_implementat_luna_curenta;
+    TrackerProgres<double> tracker_fericire{"Excelenta Fericire", 0.80};
 
     [[nodiscard]] const Zona* cautare_zona(const std::string& nume) const;
 
+
 public:
+    Zona* cautare_zona(const std::string& nume);
 
     explicit Oras(std::string nume = "", double buget = 0.0, double fericire_init = 0.5);
 
     Oras(const Oras& other) = default;
-    Oras& operator=(Oras& other) = default;
+    Oras& operator=(const Oras& other) = default;
 
     Oras(Oras&& other) noexcept = default;
     Oras& operator=(Oras&& other) noexcept = default;
@@ -36,6 +45,17 @@ public:
 
     friend void swap(Oras& a, Oras& b) noexcept;
 
+    [[nodiscard]] double get_buget() const;
+    [[nodiscard]] int get_populatie() const;
+    [[nodiscard]] double get_fericire() const;
+    [[nodiscard]] bool get_proiect_implementat() const;
+    [[nodiscard]] int get_luna_curenta() const;
+    [[nodiscard]] int get_luni_excelenta() const;
+    [[nodiscard]] int get_stare_joc() const;
+
+    void set_proiect_implementat();
+    void set_nume(const std::string& nume);
+    void set_stare_joc(int stare);
 
     void adauga_zona(Zona z);
 
@@ -56,11 +76,12 @@ public:
                                                    const std::string& nume_zona_proiect);
 
 
-
+    void scade_buget(double suma);
 
     void simulare_luna();
 
-
+    void reset();
+    void incarca_preset_challenge();
     [[nodiscard]] bool sterge_zona(const std::string& nume);
 
 

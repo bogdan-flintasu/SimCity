@@ -12,7 +12,6 @@ enum class Proiecte {
 };
 
 enum class Amanunte {
-    IMBUNATATIRE,
     DEMOLARE,
     DE_LA_ZERO
 };
@@ -31,7 +30,6 @@ inline std::string amtostr(Amanunte am) {
     switch (am) {
         case Amanunte::DE_LA_ZERO: return "De construit de la zero";
         case Amanunte::DEMOLARE: return "Demolare";
-        case Amanunte::IMBUNATATIRE: return "Imbunatatire";
         default: return "Amanunte neidentificate";
     }
 }
@@ -55,6 +53,7 @@ public:
     [[nodiscard]] Proiecte get_tip() const;
     [[nodiscard]] Amanunte get_detalii() const;
     [[nodiscard]] double get_cost_estimat() const;
+    [[nodiscard]] int get_id_tinta() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Proiect& p);
 };

@@ -65,7 +65,6 @@ double CladireServicii::impact_fericire(const Amanunte actiune) const {
 
     double extra = 0.0;
     if (actiune == Amanunte::DE_LA_ZERO)   extra = +0.035 * score;
-    else if (actiune == Amanunte::IMBUNATATIRE) extra = +0.020 * score;
     else extra = -0.045 * (0.6 + 0.4 * score);
 
     return base_admin + extra;

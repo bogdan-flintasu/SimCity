@@ -49,13 +49,16 @@ double Casa::impact_fericire(const Amanunte actiune) const {
     else score += 0.05;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.03 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.015 * score;
 
     return -0.04 * (0.7 + 0.3 * score);
 }
 
 double Casa::incasari_lunare() const {
     return static_cast<double>(get_numar_locuitori()) * 15.0;
+}
+
+int Casa::get_numar_locuitori() const {
+    return numar_locuitori;
 }
 
 std::unique_ptr<CladireRezidentiala> Casa::clone() const {

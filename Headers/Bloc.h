@@ -24,7 +24,7 @@ public:
     [[nodiscard]] int get_nr_apartamente() const;
     [[nodiscard]] int get_nr_apartamente_ocupate() const;
     [[nodiscard]] double get_mp_total_apartamente(bool doar_ocupate = false) const;
-    [[nodiscard]] int get_locatari_total() const;
+    [[nodiscard]] int get_numar_locuitori() const override;
 
     void adauga_apartament(const Apartament& ap);
     void seteaza_vacant(int id_ap, bool vacant);

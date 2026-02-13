@@ -9,15 +9,10 @@
 
 #include "../Headers/Zona.h"
 #include "../Headers/ExceptieOras.h"
-#include "../Headers/Casa.h"
 #include "../Headers/Bloc.h"
 #include "../Headers/CladireAdministrativa.h"
-#include "../Headers/CladireServicii.h"
 #include "../Headers/CladireEconomie.h"
-#include "../Headers/CladireEducatie.h"
-#include "../Headers/SpatiuVerde.h"
-#include "../Headers/Fabrica.h"
-#include "../Headers/SpatiuComercial.h"
+#include "../Headers/CladireRezidentiala.h"
 
 Zona::Zona(std::string  nume) : nume_zona(std::move(nume)) {}
 
@@ -51,6 +46,60 @@ Zona& Zona::operator=(const Zona& other) {
 
 
 Zona::~Zona() = default;
+
+Strada *Zona::get_strada_dupa_id(const int id) {
+    for (auto& s : strazi) {
+        if (s.get_ID() == id) return &s;
+    }
+    return nullptr;
+}
+
+std::unique_ptr<CladireRezidentiala> Zona::get_rezidentiala_dupa_id(const int id) {
+    for (auto it = cladiri_rezidentiale.begin(); it != cladiri_rezidentiale.end(); ++it) {
+        if ((*it)->get_ID() == id) {
+            std::unique_ptr<CladireRezidentiala> res = std::move(*it);
+            cladiri_rezidentiale.erase(it);
+            return res;
+        }
+    }
+    return nullptr;
+}
+
+std::unique_ptr<CladirePublica> Zona::get_publica_dupa_id(const int id) {
+    for (auto it = cladiri_publice.begin(); it != cladiri_publice.end(); ++it) {
+        if ((*it)->get_ID() == id) {
+            std::unique_ptr<CladirePublica> res = std::move(*it);
+            cladiri_publice.erase(it);
+            return res;
+        }
+    }
+    return nullptr;
+}
+
+int Zona::get_ultimul_id_strada() const {
+    return strazi.empty() ? -1 : strazi.back().get_ID();
+}
+
+int Zona::get_ultimul_id_rezidentiala() const {
+    return cladiri_rezidentiale.empty() ? -1 : cladiri_rezidentiale.back()->get_ID();
+}
+
+int Zona::get_ultimul_id_publica() const {
+    return cladiri_publice.empty() ? -1 : cladiri_publice.back()->get_ID();
+}
+
+const std::vector<Strada>& Zona::get_strazi() const {
+    return strazi;
+}
+
+const std::vector<std::unique_ptr<CladireRezidentiala>>& Zona::get_cladiri_rezidentiale() const {
+    return cladiri_rezidentiale;
+}
+
+const std::vector<std::unique_ptr<CladirePublica>>& Zona::get_cladiri_publice() const {
+    return cladiri_publice;
+}
+
 
 void Zona::adauga_strada(const Strada& s) { strazi.push_back(s); }
 void Zona::adauga_cladire_rezidentiala(std::unique_ptr<CladireRezidentiala> cr) { cladiri_rezidentiale.push_back(std::move(cr)); }
@@ -100,6 +149,13 @@ double Zona::calcul_incasari_zona() const {
     return total;
 }
 
+int Zona::calcul_populatie_zona() const {
+    int total = 0;
+    for (const auto& cr : cladiri_rezidentiale) {
+        total += cr->get_numar_locuitori();
+    }
+    return total;
+}
 
 bool Zona::stergere_strada(int id_tinta) {
     for (auto it = strazi.begin(); it != strazi.end(); ++it) {
@@ -130,101 +186,6 @@ bool Zona::stergere_publica(int id_tinta) {
     }
     return false;
 }
-
-bool Zona::modifica_strada(int id_tinta, const Strada &date_noi) {
-    for (Strada& s : strazi) {
-        if (s.get_ID() == id_tinta) {
-            s = date_noi;
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Zona::modifica_rezidentiala(int id_tinta, std::unique_ptr<CladireRezidentiala> date_noi) {
-    if (!date_noi) throw ExceptieDateInvalide("modifica_rezidentiala: date_noi null");
-
-    for (auto& cr : cladiri_rezidentiale) {
-        if (!cr || cr->get_ID() != id_tinta) continue;
-
-        const std::string msg = "rezidential ID=" + std::to_string(id_tinta);
-
-        try {
-            try {
-                (void)dynamic_cast<Casa&>(*cr);
-                (void)dynamic_cast<Casa&>(*date_noi);
-            } catch (const std::bad_cast&) {
-                try {
-                    (void)dynamic_cast<Bloc&>(*cr);
-                    (void)dynamic_cast<Bloc&>(*date_noi);
-                } catch (const std::bad_cast&) {
-                    throw ExceptieTipIncompatibil(msg);
-                }
-            }
-        } catch (const ExceptieOras&) {
-            throw;
-        }
-
-        cr = std::move(date_noi);
-        return true;
-    }
-    return false;
-}
-
-
-
-
-
-bool Zona::modifica_publica(int id_tinta, std::unique_ptr<CladirePublica> date_noi) {
-    if (!date_noi) throw ExceptieDateInvalide("modifica_publica: date_noi null");
-
-    for (auto& cp : cladiri_publice) {
-        if (!cp || cp->get_ID() != id_tinta) continue;
-
-        const std::string msg = "public ID=" + std::to_string(id_tinta);
-
-        try {
-            (void)dynamic_cast<CladireServicii&>(*cp);
-            (void)dynamic_cast<CladireServicii&>(*date_noi);
-        } catch (const std::bad_cast&) {
-            try {
-                (void)dynamic_cast<CladireEducatie&>(*cp);
-                (void)dynamic_cast<CladireEducatie&>(*date_noi);
-            } catch (const std::bad_cast&) {
-                try {
-                    (void)dynamic_cast<SpatiuVerde&>(*cp);
-                    (void)dynamic_cast<SpatiuVerde&>(*date_noi);
-                } catch (const std::bad_cast&) {
-                    try {
-                        // DACA AI: Fabrica : public CladireEconomie
-                        (void)dynamic_cast<Fabrica&>(*cp);
-                        (void)dynamic_cast<Fabrica&>(*date_noi);
-                    } catch (const std::bad_cast&) {
-                        try {
-                            // DACA AI: SpatiuComercial : public CladireEconomie
-                            (void)dynamic_cast<SpatiuComercial&>(*cp);
-                            (void)dynamic_cast<SpatiuComercial&>(*date_noi);
-                        } catch (const std::bad_cast&) {
-                            try {
-                                (void)dynamic_cast<CladireAdministrativa&>(*cp);
-                                (void)dynamic_cast<CladireAdministrativa&>(*date_noi);
-                            } catch (const std::bad_cast&) {
-                                throw ExceptieTipIncompatibil(msg);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        cp = std::move(date_noi);
-        return true;
-    }
-    return false;
-}
-
-
-
 
 const std::string& Zona::get_nume() const { return nume_zona; }
 

@@ -36,7 +36,7 @@ public:
     [[nodiscard]] int get_ID() const;
     [[nodiscard]] double get_cost_intretinere() const;
     [[nodiscard]] const std::string& get_nume() const;
-    [[nodiscard]] int get_numar_locuitori() const;
+    [[nodiscard]] virtual int get_numar_locuitori() const = 0;
 
     virtual void print(std::ostream& os) const;
 

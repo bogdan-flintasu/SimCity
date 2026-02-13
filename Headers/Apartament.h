@@ -20,10 +20,10 @@ public:
                         double mp_total_ = 0.0,
                         int locatari_ = 0);
 
-    int get_id() const;
-    double get_mp_total() const;
-    int get_locatari() const;
-    bool este_vacant() const;
+    [[nodiscard]] int get_id() const;
+    [[nodiscard]] double get_mp_total() const;
+    [[nodiscard]] int get_locatari() const;
+    [[nodiscard]] bool este_vacant() const;
 
     void seteaza_locatari(int x);
     void seteaza_vacant(bool v);

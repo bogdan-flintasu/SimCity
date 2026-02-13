@@ -28,6 +28,7 @@ public:
 
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;
     [[nodiscard]] double incasari_lunare() const override;
+    [[nodiscard]] int get_numar_locuitori() const override;
 
     [[nodiscard]] std::unique_ptr<CladireRezidentiala> clone() const override;
 

@@ -71,7 +71,6 @@ double CladireAdministrativa::impact_fericire(const Amanunte actiune) const {
     score += staff * 0.10;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.020 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.012 * score;
     return -0.018 * (0.6 + 0.4 * score);
 }
 
