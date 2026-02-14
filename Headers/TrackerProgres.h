@@ -1,53 +1,33 @@
-//
-// Created by flint on 2/13/2026.
-//
-
 #ifndef OOP_TRACKERPROGRES_H
 #define OOP_TRACKERPROGRES_H
 
-#include <utility>
 #include <vector>
-#include <iostream>
-#include <string>
+#include <utility>
 
-template <typename T>
+template <typename T, typename U = int>
 class TrackerProgres {
 private:
-    std::string nume_obiectiv;
-    T prag_tinta;
-    std::vector<T> istoric_atingeri;
-    int contor_consecutiv;
+    std::vector<std::pair<U, T>> istoric;
 
 public:
-    TrackerProgres(std::string nume, T prag)
-        : nume_obiectiv(std::move(nume)), prag_tinta(prag), contor_consecutiv(0) {}
+    TrackerProgres() = default;
 
-    void inregistreaza_valoare(T valoare_actuala) {
-        if (valoare_actuala >= prag_tinta) {
-            contor_consecutiv++;
-            istoric_atingeri.push_back(valoare_actuala);
-        } else {
-            contor_consecutiv = 0;
-        }
+    void inregistreaza(U moment, T valoare) {
+        istoric.push_back({moment, valoare});
     }
 
-    [[nodiscard]] int get_consecutiv() const { return contor_consecutiv; }
-    const std::vector<T>& get_istoric() const { return istoric_atingeri; }
-
-    void reseteaza() {
-        contor_consecutiv = 0;
-        istoric_atingeri.clear();
+    T get_ultima_valoare() const {
+        if (istoric.empty()) return T{};
+        return istoric.back().second;
     }
 
-    template <typename U>
-    friend void afiseaza_raport_tracker(const TrackerProgres<U>& tracker);
+    const std::vector<std::pair<U, T>>& get_istoric() const {
+        return istoric;
+    }
+
+    void reset() {
+        istoric.clear();
+    }
 };
 
-template <typename T>
-void afiseaza_raport_tracker(const TrackerProgres<T>& tracker) {
-    std::cout << "[TRACKER] Obiectiv: " << tracker.nume_obiectiv
-              << " | Progres consecutiv: " << tracker.contor_consecutiv
-              << " | Total atingeri prag: " << tracker.istoric_atingeri.size() << "\n";
-}
-
-#endif //OOP_TRACKERPROGRES_H
+#endif

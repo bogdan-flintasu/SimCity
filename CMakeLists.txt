@@ -85,12 +85,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         UI/Form.cpp
         UI/Pages/EditPage.cpp
         UI/Pages/ProjectPage.cpp
-        UI/Pages/MainMenuPage.h
         UI/Pages/MainMenuPage.cpp
-        UI/GameSession.h
         UI/GameSession.cpp
-        Headers/ChallangeManager.h
-        Headers/TrackerProgres.h
+        Source/CladireFactory.cpp
+        Source/CladireBuilder.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -119,7 +117,7 @@ elseif(UNIX)
 endif()
 
 if(WIN32)
-    target_link_options(${MAIN_EXECUTABLE_NAME} PRIVATE -static -Wl,--allow-multiple-definition)
+    target_link_options(${MAIN_EXECUTABLE_NAME} PRIVATE "")
 endif()
 
 ###############################################################################
@@ -134,5 +132,4 @@ endif()
 
 copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
-# copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+copy_files(DIRECTORY assets COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})

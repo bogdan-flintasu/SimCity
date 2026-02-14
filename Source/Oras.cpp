@@ -288,22 +288,22 @@ void Oras::simulare_luna() {
     std::cout << "\n>>> SIMULARE LUNA... <<<\n";
     luni_mandat++;
 
-    tracker_fericire.inregistreaza_valoare(indice_fericire);
-    luni_consecutive_excelenta = tracker_fericire.get_consecutiv();
-
-    afiseaza_raport_tracker(tracker_fericire);
+    istoricBuget.inregistreaza(luni_mandat, buget_curent);
 
     if (indice_fericire <= 0.001) {
         stare_joc = -1;
         std::cout << "\n=== GAME OVER ===\nCetatenii s-au revoltat (Fericire 0%). Ai fost demis!\nVor avea loc alegeri anticipate. Mai candidezi?\n";
+        std::cout << genereaza_raport_final();
     }
     else if (luni_consecutive_excelenta >= 6) {
         stare_joc = 1;
         std::cout << "\n=== VICTORIE! ===\nAi castigat admiratia locuitorilor! Orasul te iubeste.\n";
+        std::cout << genereaza_raport_final();
     }
     else if (luni_mandat > 48) {
         stare_joc = -1;
         std::cout << "\n=== GAME OVER ===\nMandatul s-a terminat (4 ani) fara rezultate notabile.\nVor avea loc noi alegeri. Mai candidezi?\n";
+        std::cout << genereaza_raport_final();
     }
 
     std::cout << "Luna Mandat: " << luni_mandat << "/48\n";
@@ -371,7 +371,7 @@ void Oras::reset() {
     this->stare_joc = 0;
     this->luni_fara_proiect = 0;
     this->proiect_implementat_luna_curenta = false;
-    this->tracker_fericire.reseteaza();
+    this->istoricBuget.reset();
 
     this->zone.clear();
 }
@@ -430,6 +430,29 @@ void Oras::incarca_preset_challenge() {
     zone.push_back(std::move(zCom));
 
     std::cout << "[CHALLENGE] Scenariul APOCALIPSA FINANCIARA a fost incarcat.\n";
+}
+
+std::string Oras::genereaza_raport_final() const {
+    std::string raport = "--- REZUMATUL EVOLUTIEI ORASULUI ---\n\n";
+    const auto date = istoricBuget.get_istoric();
+
+    if (date.empty()) {
+        return raport + "Nu exista date inregistrate.";
+    }
+
+    for (const auto&[fst, snd] : date) {
+        raport += "Luna " + std::to_string(fst) +
+                  ": " + std::to_string(static_cast<int>(snd)) + " EUR\n";
+    }
+
+    const double initial = date.front().second;
+    const double final = date.back().second;
+    const double profit = final - initial;
+
+    raport += "\n-----------------------------------\n";
+    raport += "Evolutie totala: " + std::to_string(static_cast<int>(profit)) + " EUR";
+
+    return raport;
 }
 
 std::ostream& operator<<(std::ostream& os, const Oras& o) {

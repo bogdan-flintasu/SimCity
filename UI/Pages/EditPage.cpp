@@ -12,13 +12,8 @@
 #include "../Headers/Zona.h"
 #include "../Headers/Strada.h"
 #include "../Headers/Casa.h"
-#include "../Headers/Bloc.h"
-#include "../Headers/Fabrica.h"
-#include "../Headers/SpatiuComercial.h"
 #include "../Headers/SpatiuVerde.h"
-#include "../Headers/CladireAdministrativa.h"
-#include "../Headers/CladireServicii.h"
-#include "../Headers/CladireEducatie.h"
+#include "../Headers/CladireFactory.h"
 
 constexpr float GRID_SIZE = 40.f;
 struct GridSpec { int w{}; int h{}; sf::Color color; };
@@ -246,11 +241,12 @@ void EditMode::processFormInput() {
         return;
     }
 
-    std::string nume = inputs[0];
+    const std::string& nume = inputs[0];
 
     if (m_pendingType == ui::ToolType::ZONING) {
         VisualZone vz; vz.nume = nume; vz.shape = m_selectionRect;
-        vz.shape.setFillColor(sf::Color(0, 0, 200, 40)); vz.shape.setOutlineColor(sf::Color::Blue);
+        vz.shape.setFillColor(sf::Color(0, 0, 200, 40));
+        vz.shape.setOutlineColor(sf::Color::Blue);
         m_visualZones.push_back(vz);
         m_oras.adauga_zona(Zona(nume));
         m_pendingType = ui::ToolType::NONE;
@@ -277,91 +273,41 @@ void EditMode::processFormInput() {
         double costDePlata = m_isProjectMode ? costReal : 0.0;
         constexpr auto actiuneConstructie = Amanunte::DE_LA_ZERO;
 
-        Proiecte tipBackend = Proiecte::STRADA;
+        if (m_oras.get_buget() < costDePlata) {
+            throw ExceptieBugetInsuficient(m_oras.get_buget(), costDePlata);
+        }
+
+        Proiecte tipBackend;
         std::stringstream ss;
 
         if (m_pendingType == ui::ToolType::STRADA) {
             tipBackend = Proiecte::STRADA;
-            int benzi = std::stoi(inputs[2]), sUnic = std::stoi(inputs[3]), trot = std::stoi(inputs[4]);
+            Proiect p(nume, tipBackend, actiuneConstructie, static_cast<int>(costDePlata), 0);
 
-            Strada s(0, nume, costReal, 100, (sUnic == 1), (trot == 1), benzi, m_calculatedRoadLength);
+            auto s = CladireFactory::creeaza_strada(inputs, m_calculatedRoadLength);
+            m_oras.implementare_proiect_stradal(p, *s, targetZone);
 
-            Proiect p(nume, Proiecte::STRADA, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_stradal(p, s, targetZone);
-            ss << formatDetails("Benzi", inputs[2]) << formatDetails("Trotuar", (trot == 1 ? "Da" : "Nu"));
+            ss << formatDetails("Benzi", inputs[2])
+               << formatDetails("Trotuar", (inputs[4] == "1" ? "Da" : "Nu"));
         }
-        else if (m_pendingType == ui::ToolType::CASA) {
+        else if (m_pendingType == ui::ToolType::CASA || m_pendingType == ui::ToolType::BLOC) {
             tipBackend = Proiecte::REZIDENTIAL;
-            auto c = std::make_unique<Casa>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), std::stoi(inputs[4]));
+            Proiect p(nume, tipBackend, actiuneConstructie, static_cast<int>(costDePlata), 0);
 
-            Proiect p(nume, Proiecte::REZIDENTIAL, actiuneConstructie, static_cast<int>(costDePlata), 0);
+            auto rezid = CladireFactory::creeaza_rezidentiala(m_pendingType, inputs);
+            m_oras.implementare_proiect_rezidential(p, std::move(rezid), targetZone);
 
-            m_oras.implementare_proiect_rezidential(p, std::move(c), targetZone);
-            ss << formatDetails("Etaje", inputs[3]) << formatDetails("Locatari", inputs[4]);
+            ss << formatDetails("Etaje", inputs[3])
+               << formatDetails("Locatari", inputs[4]);
         }
-        else if (m_pendingType == ui::ToolType::BLOC) {
-            tipBackend = Proiecte::REZIDENTIAL;
-            auto b = std::make_unique<Bloc>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), std::stoi(inputs[4]));
-
-            Proiect p(nume, Proiecte::REZIDENTIAL, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_rezidential(p, std::move(b), targetZone);
-            ss << formatDetails("Etaje", inputs[3]);
-        }
-        else if (m_pendingType == ui::ToolType::FABRICA) {
+        else {
             tipBackend = Proiecte::PUBLIC;
-            auto f = std::make_unique<Fabrica>(0, nume, costReal, std::stod(inputs[2]), std::stod(inputs[3]), std::stoi(inputs[4]), (inputs[9] == "1"), 50, 10, 0.5);
+            Proiect p(nume, tipBackend, actiuneConstructie, static_cast<int>(costDePlata), 0);
 
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
+            auto publica = CladireFactory::creeaza_publica(m_pendingType, inputs);
+            m_oras.implementare_proiect_public(p, std::move(publica), targetZone);
 
-            m_oras.implementare_proiect_public(p, std::move(f), targetZone);
-            ss << formatDetails("Productie", inputs[3]) << formatDetails("Angajati", inputs[4]);
-        }
-        else if (m_pendingType == ui::ToolType::SPATIU_VERDE) {
-            tipBackend = Proiecte::PUBLIC;
-            auto sv = std::make_unique<SpatiuVerde>(0, nume, costReal, std::stod(inputs[2]), std::stod(inputs[3]), (inputs[6] == "1"), std::stod(inputs[4]), 0.9);
-
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_public(p, std::move(sv), targetZone);
-            ss << formatDetails("Suprafata", inputs[3]);
-        }
-        else if (m_pendingType == ui::ToolType::SPATIU_COMERCIAL) {
-            tipBackend = Proiecte::PUBLIC;
-            auto sc = std::make_unique<SpatiuComercial>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), (inputs[9] == "1"), 50, 20, 100);
-
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_public(p, std::move(sc), targetZone);
-            ss << formatDetails("Angajati", inputs[3]);
-        }
-        else if (m_pendingType == ui::ToolType::CLADIRE_ADMINISTRATIVA) {
-            tipBackend = Proiecte::PUBLIC;
-            auto ca = std::make_unique<CladireAdministrativa>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), (inputs[7] == "1"), 80, 10, 5);
-
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_public(p, std::move(ca), targetZone);
-            ss << formatDetails("Capacitate", inputs[3]);
-        }
-        else if (m_pendingType == ui::ToolType::CLADIRE_SERVICII) {
-            tipBackend = Proiecte::PUBLIC;
-            auto cs = std::make_unique<CladireServicii>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), (inputs[6] == "1"), 15, 100, 50, 20, 50, 80);
-
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_public(p, std::move(cs), targetZone);
-            ss << formatDetails("Dotare", inputs[8]);
-        }
-        else if (m_pendingType == ui::ToolType::CLADIRE_EDUCATIE) {
-            tipBackend = Proiecte::PUBLIC;
-            auto ce = std::make_unique<CladireEducatie>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), (inputs[10] == "1"), 4, 85, 9.5, 10, 95);
-
-            Proiect p(nume, Proiecte::PUBLIC, actiuneConstructie, static_cast<int>(costDePlata), 0);
-
-            m_oras.implementare_proiect_public(p, std::move(ce), targetZone);
-            ss << formatDetails("Rating", inputs[8]);
+            ss << formatDetails("Info", "Proiect Public");
         }
 
         VisualEntity ve;
@@ -371,11 +317,12 @@ void EditMode::processFormInput() {
         } else {
             auto spec = getSpec(m_pendingType);
             ve.shape.setPosition(m_pendingPos);
-            ve.shape.setSize({static_cast<float>(spec.w) * GRID_SIZE, static_cast<float>(spec.h) * GRID_SIZE});        }
+            ve.shape.setSize({static_cast<float>(spec.w) * GRID_SIZE, static_cast<float>(spec.h) * GRID_SIZE});
+        }
+
         ve.shape.setFillColor(getSpec(m_pendingType).color);
         ve.nume = nume;
         ve.parentZone = targetZone;
-
         ve.costInitial = costReal;
         ve.tipProiect = tipBackend;
         ve.detalii = "Zona: " + targetZone + "\n" + ss.str();
@@ -383,7 +330,7 @@ void EditMode::processFormInput() {
         if (Zona* z = m_oras.cautare_zona(targetZone)) {
             if (m_pendingType == ui::ToolType::STRADA) ve.id = z->get_ultimul_id_strada();
             else if (tipBackend == Proiecte::REZIDENTIAL) ve.id = z->get_ultimul_id_rezidentiala();
-            else if (tipBackend == Proiecte::PUBLIC) ve.id = z->get_ultimul_id_publica();
+            else ve.id = z->get_ultimul_id_publica();
         }
 
         m_visualEntities.push_back(ve);
@@ -400,17 +347,15 @@ void EditMode::processFormInput() {
         }
 
     } catch (const ExceptieBugetInsuficient& e) {
-        std::stringstream ss;
-        ss << "FONDURI INSUFICIENTE!\n"
-           << "Cost proiect: " << std::fixed << std::setprecision(2) << e.getCost() << " RON\n"
-           << "Iti mai lipsesc: " << e.getLipsa() << " RON.";
+        std::stringstream errorSs;
+        errorSs << "FONDURI INSUFICIENTE!\n"
+                << "Cost proiect: " << std::fixed << std::setprecision(0) << e.getCost() << " RON\n"
+                << "Iti lipsesc: " << e.getLipsa() << " RON";
 
-        m_modalText.setString(ss.str());
+        m_modalText.setString(errorSs.str());
         m_showConfirmModal = true;
-        std::cout << "[LOG] " << e.what() << " Lipsa: " << e.getLipsa() << std::endl;
-    }
-    catch (const ExceptieIDInexistent& e) {
-        std::cout << "[LOG] Eroare critica: ID-ul " << e.getID() << " a disparut din baza de date!" << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "Eroare neprevazuta: " << e.what() << "\n";
     }
 
     m_pendingType = ui::ToolType::NONE;

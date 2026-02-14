@@ -25,7 +25,7 @@ private:
     std::vector<Zona> zone;
     int luni_fara_proiect;
     bool proiect_implementat_luna_curenta;
-    TrackerProgres<double> tracker_fericire{"Excelenta Fericire", 0.80};
+    TrackerProgres<double, int> istoricBuget;
 
     [[nodiscard]] const Zona* cautare_zona(const std::string& nume) const;
 
@@ -81,6 +81,7 @@ public:
     void incarca_preset_challenge();
     [[nodiscard]] bool sterge_zona(const std::string& nume);
 
+    [[nodiscard]] std::string genereaza_raport_final() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Oras& o);
 };
