@@ -51,7 +51,7 @@ Strada *Zona::get_strada_dupa_id(const int id) {
     for (auto& s : strazi) {
         if (s.get_ID() == id) return &s;
     }
-    return nullptr;
+    throw ExceptieIDInexistent(id);
 }
 
 std::unique_ptr<CladireRezidentiala> Zona::get_rezidentiala_dupa_id(const int id) {
@@ -62,7 +62,7 @@ std::unique_ptr<CladireRezidentiala> Zona::get_rezidentiala_dupa_id(const int id
             return res;
         }
     }
-    return nullptr;
+    throw ExceptieIDInexistent(id);
 }
 
 std::unique_ptr<CladirePublica> Zona::get_publica_dupa_id(const int id) {
@@ -73,7 +73,7 @@ std::unique_ptr<CladirePublica> Zona::get_publica_dupa_id(const int id) {
             return res;
         }
     }
-    return nullptr;
+    throw ExceptieIDInexistent(id);
 }
 
 int Zona::get_ultimul_id_strada() const {

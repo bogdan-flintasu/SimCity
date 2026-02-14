@@ -30,13 +30,13 @@ void ProjectMode::initUI(const sf::RenderWindow& window) {
 
     m_progressBarContainer.setSize({400.f, 10.f});
     m_progressBarContainer.setOrigin({200.f, 5.f});
-    m_progressBarContainer.setPosition({centerX, centerY - 140.f});
+    m_progressBarContainer.setPosition({centerX, centerY - 100.f});
     m_progressBarContainer.setFillColor(sf::Color(50, 50, 50));
     m_progressBarContainer.setOutlineThickness(1.f);
     m_progressBarContainer.setOutlineColor(sf::Color::White);
 
     m_progressBarFill.setSize({0.f, 10.f});
-    m_progressBarFill.setPosition({centerX - 200.f, centerY - 145.f});
+    m_progressBarFill.setPosition({centerX - 200.f, centerY - 105.f});
     m_progressBarFill.setFillColor(sf::Color(0, 255, 0));
 
     m_buttons.clear();
@@ -73,12 +73,12 @@ void ProjectMode::initUI(const sf::RenderWindow& window) {
         m_buttons.push_back(btn);
     };
 
-    createBtn("PROIECT INFRASTRUCTURA", 20.f, "Infrastructura");
-    createBtn("PROIECT REZIDENTIAL", 90.f, "Rezidential");
-    createBtn("PROIECT PUBLIC", 160.f, "Public");
+    createBtn("PROIECT INFRASTRUCTURA", 60.f, "Infrastructura");
+    createBtn("PROIECT REZIDENTIAL", 130.f, "Rezidential");
+    createBtn("PROIECT PUBLIC", 2000.f, "Public");
 
     m_btnSimulate = std::make_shared<ui::Button>(
-        sf::Vector2f{centerX - 120.f, centerY - 200.f},
+        sf::Vector2f{centerX - 120.f, centerY - 150.f},
         sf::Vector2f{240.f, 50.f},
         "SIMULARE LUNA", m_font, sf::Color(220, 150, 0)
     );
@@ -126,7 +126,11 @@ void ProjectMode::updateStatsText() {
 
     ss << "Fericire: " << fericireAfisata << "%";
 
-    ss << "Luni de excelenta: " << luniExcelenta << " / 6";
+    ss << "\tLuni de excelenta: " << luniExcelenta << " / 6\n";
+
+    ss << "Populatie: " << m_oras.get_populatie() << "\t";
+
+    ss << "Numar masini: " << m_oras.calcul_numar_total_masini() <<"\n";
 
     m_statsText.setString(ss.str());
 
@@ -142,7 +146,7 @@ void ProjectMode::updateStatsText() {
 
     m_statsText.setPosition({
         m_dashboardBg.getPosition().x,
-        m_dashboardBg.getPosition().y - 260.f
+        m_dashboardBg.getPosition().y - 230.f
     });
 }
 

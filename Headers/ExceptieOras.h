@@ -13,35 +13,45 @@ public:
     explicit ExceptieOras(const std::string& msg) : std::runtime_error(msg) {}
 };
 
-class ExceptieZonaInexistenta final : public ExceptieOras {
-public:
-    explicit ExceptieZonaInexistenta(const std::string& nume)
-        : ExceptieOras("Zona inexistenta: " + nume) {}
-};
-
 class ExceptieBugetInsuficient : public ExceptieOras {
+private:
+    double m_bugetActual;
+    double m_costNecesar;
 public:
     explicit ExceptieBugetInsuficient(double buget, double cost)
-        : ExceptieOras("Buget insuficient. Buget=" + std::to_string(buget) +
-                       ", cost=" + std::to_string(cost)) {}
+        : ExceptieOras("Fonduri insuficiente pentru finalizarea proiectului."),
+          m_bugetActual(buget), m_costNecesar(cost) {}
+
+    [[nodiscard]] double getLipsa() const { return m_costNecesar - m_bugetActual; }
+    [[nodiscard]] double getBuget() const { return m_bugetActual; }
+    [[nodiscard]] double getCost() const { return m_costNecesar; }
 };
 
-class ExceptieIDInexistent final : public ExceptieOras {
+class ExceptieIDInexistent : public ExceptieOras {
+private:
+    int m_idProblema;
 public:
-    explicit ExceptieIDInexistent(int id)
-        : ExceptieOras("ID inexistent: " + std::to_string(id)) {}
+    explicit ExceptieIDInexistent(const int id)
+        : ExceptieOras("ID-ul solicitat nu a fost gasit in baza de date a orasului."),
+          m_idProblema(id) {}
+
+    [[nodiscard]] int getID() const { return m_idProblema; }
 };
 
-class ExceptieTipIncompatibil final : public ExceptieOras {
+class ExceptieZonaInexistenta : public ExceptieOras {
+private:
+    std::string m_numeZona;
 public:
-    explicit ExceptieTipIncompatibil(const std::string& msg)
-        : ExceptieOras("Tip incompatibil: " + msg) {}
+    explicit ExceptieZonaInexistenta(std::string nume)
+        : ExceptieOras("Zona specificata nu exista."), m_numeZona(std::move(nume)) {}
+
+    [[nodiscard]] const std::string& getNumeZona() const { return m_numeZona; }
 };
 
-class ExceptieDateInvalide final : public ExceptieOras {
+class ExceptieDateInvalide : public ExceptieOras {
 public:
     explicit ExceptieDateInvalide(const std::string& msg)
-        : ExceptieOras("Date invalide: " + msg) {}
+        : ExceptieOras("Datele introduse sunt invalide: " + msg) {}
 };
 
 #endif //OOP_EXCEPTIEORAS_H

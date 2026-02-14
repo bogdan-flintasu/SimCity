@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <utility>
 
+#include "ExceptieOras.h"
 #include "../Headers/Proiect.h"
 #include "../Headers/Zona.h"
 #include "../Headers/Strada.h"
@@ -30,7 +31,7 @@ struct ChallengeSpecs {
 const std::map<ui::ToolType, ChallengeSpecs> DATA = {
     {ui::ToolType::STRADA, { 2000.0, { "Strada", "2000", "2", "0", "1" } }},
     {ui::ToolType::CASA, { 5000.0, { "Casa", "5000", "120", "2", "4" } }},
-    {ui::ToolType::BLOC, { 15000.0, { "Bloc Nou", "15000", "300", "8" } }},
+    {ui::ToolType::BLOC, { 15000.0, { "Bloc Nou", "15000", "300", "8", "100" } }},
     {ui::ToolType::FABRICA, { 30000.0, { "Uzina", "30000", "2000", "5000", "100", "0", "50", "10", "200", "0" } }},
     {ui::ToolType::SPATIU_COMERCIAL, { 20000.0, { "Mall", "20000", "1500", "30", "50", "60", "3000", "100", "5", "0" } }},
     {ui::ToolType::SPATIU_VERDE, { 5000.0, { "Parc", "5000", "200", "500", "10", "1000", "0" } }},
@@ -65,7 +66,7 @@ const std::map<ui::ToolType, std::vector<std::string>> BUILDING_RECIPES = {
     {ui::ToolType::STRADA,                 {"Nume", "Cost Constr.", "Benzi/Sens", "Sens Unic (0/1)", "Trotuar (0/1)"}},
     {ui::ToolType::SPATIU_VERDE,           {"Nume", "Cost C.", "Cost I.", "Suprafata", "Mentenanta", "Capacitate", "Inchiriat (0/1)"}},
     {ui::ToolType::CASA,                   {"Nume", "Cost Constr.", "Suprafata", "Etaje", "Locatari"}},
-    {ui::ToolType::BLOC,                   {"Nume", "Cost Constr.", "Suprafata", "Etaje"}},
+    {ui::ToolType::BLOC,                   {"Nume", "Cost Constr.", "Suprafata", "Etaje", "Locatari"}},
     {ui::ToolType::FABRICA,                {"Nume", "Cost C.", "Cost I.", "Productie", "Angajati", "Automatizare", "Poluare", "Risc", "Capacitate", "Inchiriat (0/1)"}},
     {ui::ToolType::SPATIU_COMERCIAL,       {"Nume", "Cost C.", "Cost I.", "Unitati", "Angajati", "Trafic", "Profit", "Locuri Parcare", "Nivel Servicii", "Inchiriat (0/1)"}},
     {ui::ToolType::CLADIRE_ADMINISTRATIVA, {"Nume", "Cost C.", "Cost I.", "Capacitate", "Securitate", "Timp Raspuns", "Coruptie", "Inchiriat (0/1)"}},
@@ -301,7 +302,7 @@ void EditMode::processFormInput() {
         }
         else if (m_pendingType == ui::ToolType::BLOC) {
             tipBackend = Proiecte::REZIDENTIAL;
-            auto b = std::make_unique<Bloc>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]));
+            auto b = std::make_unique<Bloc>(0, nume, costReal, std::stod(inputs[2]), std::stoi(inputs[3]), std::stoi(inputs[4]));
 
             Proiect p(nume, Proiecte::REZIDENTIAL, actiuneConstructie, static_cast<int>(costDePlata), 0);
 
@@ -398,8 +399,15 @@ void EditMode::processFormInput() {
             m_draftActions.push_back(act);
         }
 
-    } catch (const std::exception& e) {
-        std::cout << "EROARE CONSTRUCTIE: " << e.what() << "\n";
+    } catch (const ExceptieBugetInsuficient& e) {
+        std::string mesaj = "Nu ai destui bani! Iti mai lipsesc " +
+                             std::to_string(static_cast<int>(e.getLipsa())) + " RON.";
+
+        m_modalText.setString(mesaj);
+        m_showConfirmModal = true;
+    }
+    catch (const ExceptieOras& e) {
+        std::cout << "Eroare specifica orasului: " << e.what() << "\n";
     }
 
     m_pendingType = ui::ToolType::NONE;
