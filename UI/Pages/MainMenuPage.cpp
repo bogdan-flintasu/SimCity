@@ -5,7 +5,7 @@
 #include "MainMenuPage.h"
 
 MainMenuPage::MainMenuPage(const sf::RenderWindow& window, sf::Font& font)
-    : m_font(font), m_title(font), m_subtitle(font)
+    : m_title(font), m_subtitle(font)
 {
     const sf::Vector2u size = window.getSize();
     float cx = static_cast<float>(size.x) / 2.f;

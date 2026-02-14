@@ -7,7 +7,7 @@
 #include "Button.h"
 
 GameSession::GameSession(sf::RenderWindow& window, sf::Font& font, const SessionMode mode)
-    : m_window(window), m_font(font),
+    : m_window(window),
       m_oras(mode == SessionMode::SANDBOX ? "Oras Sandbox" : "Challenge",
             mode == SessionMode::SANDBOX ? 1000000.0 : 0,
             0),
