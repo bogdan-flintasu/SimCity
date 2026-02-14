@@ -50,20 +50,6 @@ double CladireEducatie::eficienta_cladire() const {
     return suma / static_cast<double>(salariati.size());
 }
 
-void CladireEducatie::set_nivel_educatie(const int x) { nivel_educatie = (x < 0 ? 0 : x); }
-
-void CladireEducatie::set_rata_promovare(const double x) {
-    if (x < 0.0) rata_promovare = 0.0;
-    else if (x > 1.0) rata_promovare = 1.0;
-    else rata_promovare = x;
-}
-
-void CladireEducatie::set_absente(const double x) {
-    if (x < 0.0) rata_absenta = 0.0;
-    else if (x > 1.0) rata_absenta = 1.0;
-    else rata_absenta = x;
-}
-
 double CladireEducatie::incasari() const {
     return 0.0;
 }

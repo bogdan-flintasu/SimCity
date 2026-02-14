@@ -26,10 +26,6 @@ SpatiuComercial::SpatiuComercial(const int id,
       locuri_parcare(locuri_parcare_ < 0 ? 0 : locuri_parcare_),
       nivel_servicii(clamp01(nivel_servicii_)) {}
 
-void SpatiuComercial::set_trafic_zilnic(const double v) { trafic_zilnic = (v < 0 ? 0.0 : v); }
-void SpatiuComercial::set_locuri_parcare(const int v) { locuri_parcare = (v < 0 ? 0 : v); }
-
-
 double SpatiuComercial::eficienta_trafic() const {
     const double t = trafic_zilnic < 0 ? 0.0 : trafic_zilnic;
     const double p = locuri_parcare < 0 ? 0.0 : static_cast<double>(locuri_parcare);

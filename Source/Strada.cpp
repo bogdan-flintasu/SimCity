@@ -45,15 +45,6 @@ bool Strada::get_sens_unic() const { return sens_unic; }
 double Strada::get_lungime() const { return lungime; }
 int Strada::get_numar_benzi() const { return numar_benzi; }
 
-void Strada::set_numar_benzi(const int n) {
-    numar_benzi = n;
-}
-
-void Strada::set_ID(const int id_nou) {
-    this->ID = id_nou;
-}
-
-
 std::ostream& operator<<(std::ostream& os, const Strada& s) {
     os << " Strada" << s.nume << " (ID: " << s.ID << ")\n";
     os << " Cost C/I: " << s.cost_construire << "/" << s.cost_intretinere << " RON \n";

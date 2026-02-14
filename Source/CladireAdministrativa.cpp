@@ -30,11 +30,6 @@ CladireAdministrativa::CladireAdministrativa(const int id,
     if (nivel_coruptie < 0.0 || nivel_coruptie > 1.0) throw ExceptieDateInvalide("CladireAdministrativa: coruptie in afara [0,1]");
 }
 
-void CladireAdministrativa::adauga_salariat(const Salariat& s) {
-    salariati.push_back(s);
-    cost_intretinere += s.salariu;
-}
-
 int CladireAdministrativa::get_nr_salariati() const {
     return static_cast<int>(salariati.size());
 }
@@ -44,12 +39,6 @@ double CladireAdministrativa::eficienta_cladire() const {
     double s = 0.0;
     for (const auto& sal : salariati) s += sal.eficienta;
     return s / static_cast<double>(salariati.size());
-}
-
-void CladireAdministrativa::set_nivel_coruptie(const double x) {
-    if (x < 0.0) nivel_coruptie = 0.0;
-    else if (x > 1.0) nivel_coruptie = 1.0;
-    else nivel_coruptie = x;
 }
 
 double CladireAdministrativa::incasari() const {

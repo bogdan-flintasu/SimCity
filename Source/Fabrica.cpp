@@ -24,7 +24,6 @@ Fabrica::Fabrica(const int id,
       automatizare(clamp01(automatizare_)),
       siguranta(clamp01(siguranta_)) {}
 
-void Fabrica::set_productie_lunara(const double v) { productie_lunara = (v < 0 ? 0.0 : v); }
 void Fabrica::set_automatizare(const double v) { automatizare = clamp01(v); }
 
 double Fabrica::incasari() const {

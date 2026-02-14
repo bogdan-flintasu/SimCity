@@ -46,8 +46,6 @@ public:
     [[nodiscard]] double get_lungime() const;
     [[nodiscard]] int get_numar_benzi() const;
 
-    void set_numar_benzi(int n);
-    void set_ID(int id_nou);
 
     // operator<<
     friend std::ostream& operator<<(std::ostream& os, const Strada& s);

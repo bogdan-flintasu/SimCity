@@ -284,12 +284,6 @@ bool Oras::implementare_proiect_public(const Proiect& p,
     return true;
 }
 
-
-
-void Oras::scade_buget(const double suma) {
-    buget_curent -= suma;
-}
-
 void Oras::simulare_luna() {
     std::cout << "\n>>> SIMULARE LUNA... <<<\n";
     luni_mandat++;

@@ -75,9 +75,6 @@ public:
                                                    std::unique_ptr<CladirePublica> cp,
                                                    const std::string& nume_zona_proiect);
 
-
-    void scade_buget(double suma);
-
     void simulare_luna();
 
     void reset();

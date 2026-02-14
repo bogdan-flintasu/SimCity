@@ -30,12 +30,6 @@ public:
                              double rata_rezolvare_ = 0.0);
 
 
-
-    void set_dotare(double x);
-    void set_timp_asteptare(double x);
-    void set_stoc_curent(double x);
-    void set_rata_rezolvare_cazuri(double x);
-
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;
 
