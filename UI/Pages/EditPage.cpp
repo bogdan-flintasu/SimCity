@@ -276,7 +276,7 @@ void EditMode::processFormInput() {
         double costDePlata = m_isProjectMode ? costReal : 0.0;
         constexpr auto actiuneConstructie = Amanunte::DE_LA_ZERO;
 
-        Proiecte tipBackend;
+        Proiecte tipBackend = Proiecte::STRADA;
         std::stringstream ss;
 
         if (m_pendingType == ui::ToolType::STRADA) {

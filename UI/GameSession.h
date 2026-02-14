@@ -17,13 +17,11 @@ enum class SessionMode { CHALLENGE, SANDBOX };
 class GameSession {
 private:
     sf::RenderWindow& m_window;
-    sf::Font& m_font;
     Oras m_oras;
     EditMode m_editPage;
     ProjectMode m_projectPage;
 
     bool m_isRunning = true;
-    bool m_showIntroPopup = true;
 
     sf::RectangleShape m_introBg;
     sf::Text m_introTitle;

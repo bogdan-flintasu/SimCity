@@ -19,7 +19,6 @@ enum class MenuAction {
 
 class MainMenuPage {
 private:
-    sf::Font& m_font;
     sf::RectangleShape m_background;
     sf::Text m_title;
     sf::Text m_subtitle;
