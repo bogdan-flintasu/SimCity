@@ -14,10 +14,7 @@ public:
     explicit Apartament(int id_ = 0,
                         int camere_ = 1,
                         int locatari_ = 0);
-
-    [[nodiscard]] int get_id() const;
     [[nodiscard]] int get_locatari() const;
-
     void seteaza_locatari(int x);
 };
 

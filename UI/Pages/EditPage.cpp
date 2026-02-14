@@ -400,14 +400,17 @@ void EditMode::processFormInput() {
         }
 
     } catch (const ExceptieBugetInsuficient& e) {
-        std::string mesaj = "Nu ai destui bani! Iti mai lipsesc " +
-                             std::to_string(static_cast<int>(e.getLipsa())) + " RON.";
+        std::stringstream ss;
+        ss << "FONDURI INSUFICIENTE!\n"
+           << "Cost proiect: " << std::fixed << std::setprecision(2) << e.getCost() << " RON\n"
+           << "Iti mai lipsesc: " << e.getLipsa() << " RON.";
 
-        m_modalText.setString(mesaj);
+        m_modalText.setString(ss.str());
         m_showConfirmModal = true;
+        std::cout << "[LOG] " << e.what() << " Lipsa: " << e.getLipsa() << std::endl;
     }
-    catch (const ExceptieOras& e) {
-        std::cout << "Eroare specifica orasului: " << e.what() << "\n";
+    catch (const ExceptieIDInexistent& e) {
+        std::cout << "[LOG] Eroare critica: ID-ul " << e.getID() << " a disparut din baza de date!" << std::endl;
     }
 
     m_pendingType = ui::ToolType::NONE;
@@ -443,12 +446,10 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
 
     if (m_sideMenu.getActiveTool() == ui::ToolType::FINALIZE) {
         m_sideMenu.resetSelection();
-
         if (m_isProjectMode && !m_draftActions.empty()) {
             updateSummaryText();
             m_showSummary = true;
-        }
-        else {
+        } else {
             m_showConfirmModal = true;
         }
         return;
@@ -486,17 +487,18 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
             }
 
             if (tool == ui::ToolType::DELETE) {
-                auto it = std::ranges::find_if(m_visualEntities, [&](const VisualEntity& ve) {
+                // 1. Încercăm să ștergem o clădire/entitate
+                auto itEntity = std::ranges::find_if(m_visualEntities, [&](const VisualEntity& ve) {
                     return ve.shape.getGlobalBounds().contains(worldPos);
                 });
 
-                if (it != m_visualEntities.end()) {
-                    int pId = it->id;
-                    std::string pNume = it->nume;
-                    std::string pZona = it->parentZone;
-                    Proiecte pTip = it->tipProiect;
-                    double pCostInitial = it->costInitial;
-                    sf::FloatRect pRect = it->shape.getGlobalBounds();
+                if (itEntity != m_visualEntities.end()) {
+                    int pId = itEntity->id;
+                    std::string pNume = itEntity->nume;
+                    std::string pZona = itEntity->parentZone;
+                    Proiecte pTip = itEntity->tipProiect;
+                    double pCostInitial = itEntity->costInitial;
+                    sf::FloatRect pRect = itEntity->shape.getGlobalBounds();
 
                     if (m_isProjectMode) {
                         bool permis = true;
@@ -516,21 +518,25 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
                         act.rect = pRect;
 
                         act.commitAction = [=, this]() {
-                            Proiect p(pNume, pTip, Amanunte::DEMOLARE, static_cast<int>(pCostInitial), pId);
-                            if (pTip == Proiecte::STRADA) {
-                                if (Zona* z = m_oras.cautare_zona(pZona)) {
-                                    if (auto* s = z->get_strada_dupa_id(pId))
-                                        m_oras.implementare_proiect_stradal(p, *s, pZona);
+                            try {
+                                Proiect p(pNume, pTip, Amanunte::DEMOLARE, static_cast<int>(pCostInitial), pId);
+                                if (pTip == Proiecte::STRADA) {
+                                    if (Zona* z = m_oras.cautare_zona(pZona)) {
+                                        if (auto* s = z->get_strada_dupa_id(pId))
+                                            m_oras.implementare_proiect_stradal(p, *s, pZona);
+                                        else throw ExceptieIDInexistent(pId);
+                                    }
                                 }
+                                else if (pTip == Proiecte::REZIDENTIAL)
+                                    m_oras.implementare_proiect_rezidential(p, nullptr, pZona);
+                                else if (pTip == Proiecte::PUBLIC)
+                                    m_oras.implementare_proiect_public(p, nullptr, pZona);
+                            } catch (const ExceptieIDInexistent& e) {
+                                std::cout << "Eroare ID la commit: " << e.getID() << "\n";
                             }
-                            else if (pTip == Proiecte::REZIDENTIAL)
-                                m_oras.implementare_proiect_rezidential(p, nullptr, pZona);
-                            else if (pTip == Proiecte::PUBLIC)
-                                m_oras.implementare_proiect_public(p, nullptr, pZona);
                         };
                         m_draftActions.push_back(act);
-                    }
-                    else {
+                    } else {
                         Proiect p(pNume, pTip, Amanunte::DEMOLARE, 0, pId);
                         if (pTip == Proiecte::STRADA) {
                             if (Zona* z = m_oras.cautare_zona(pZona)) {
@@ -541,9 +547,29 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
                         else if (pTip == Proiecte::REZIDENTIAL) m_oras.implementare_proiect_rezidential(p, nullptr, pZona);
                         else if (pTip == Proiecte::PUBLIC) m_oras.implementare_proiect_public(p, nullptr, pZona);
                     }
-
-                    m_visualEntities.erase(it);
+                    m_visualEntities.erase(itEntity);
                     m_selectedEntity = nullptr;
+                }
+                else {
+                    // 2. DACĂ NU E CLĂDIRE, verificăm dacă e o ZONĂ
+                    auto itZone = std::ranges::find_if(m_visualZones, [&](const VisualZone& vz) {
+                        return vz.shape.getGlobalBounds().contains(worldPos);
+                    });
+
+                    if (itZone != m_visualZones.end()) {
+                        std::string numeZona = itZone->nume;
+                        try {
+                            if (m_oras.sterge_zona(numeZona)) {
+                                std::cout << "Zona stearsa: " << numeZona << "\n";
+                                m_visualZones.erase(itZone);
+                                std::erase_if(m_visualEntities, [&](const VisualEntity& ve) {
+                                    return ve.parentZone == numeZona;
+                                });
+                            }
+                        } catch (const ExceptieZonaInexistenta& e) {
+                            std::cout << "Eroare: " << e.getNumeZona() << " nu a fost gasita.\n";
+                        }
+                    }
                 }
             }
             else if (tool == ui::ToolType::ZONING || tool == ui::ToolType::STRADA) {
@@ -555,7 +581,8 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
             }
             else if (tool != ui::ToolType::NONE) {
                 const auto spec = getSpec(tool);
-                const sf::FloatRect r(snap, {static_cast<float>(spec.w) * GRID_SIZE, static_cast<float>(spec.h) * GRID_SIZE});                sf::FloatRect colR = r; colR.position.x += 2.5f; colR.position.y += 2.5f; colR.size.x -= 5.0f; colR.size.y -= 5.0f;
+                const sf::FloatRect r(snap, {static_cast<float>(spec.w) * GRID_SIZE, static_cast<float>(spec.h) * GRID_SIZE});
+                sf::FloatRect colR = r; colR.position.x += 2.5f; colR.position.y += 2.5f; colR.size.x -= 5.0f; colR.size.y -= 5.0f;
                 bool ocupat = false;
                 for(const auto& ve : m_visualEntities) if(ve.shape.getGlobalBounds().findIntersection(colR)) ocupat = true;
                 bool inZona = false;
@@ -567,9 +594,7 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
                     if(BUILDING_RECIPES.contains(m_pendingType)) {
                         m_form.configure(BUILDING_RECIPES.at(m_pendingType));
                         if (m_isChallengeActive) {
-                            if (DATA.contains(m_pendingType)) {
-                                m_form.fillInputs(DATA.at(m_pendingType).valoriDefault);
-                            }
+                            if (DATA.contains(m_pendingType)) m_form.fillInputs(DATA.at(m_pendingType).valoriDefault);
                         }
                         m_form.show();
                     }
@@ -591,12 +616,9 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
 
     if (const auto* mRel = event.getIf<sf::Event::MouseButtonReleased>()) {
         if (mRel->button == sf::Mouse::Button::Right) m_isPanning = false;
-
         if (mRel->button == sf::Mouse::Button::Left && m_isDragging) {
             m_isDragging = false;
-
             if (mouseOverUI) return;
-
             if (const ui::ToolType tool = m_sideMenu.getActiveTool(); tool == ui::ToolType::ZONING) {
                 if(std::abs(m_selectionRect.getSize().x) > 10) {
                     m_pendingType = ui::ToolType::ZONING;
@@ -611,7 +633,6 @@ void EditMode::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
                     float pixelLen = std::max(std::abs(size.x), std::abs(size.y));
                     int blocks = static_cast<int>(std::round(pixelLen / GRID_SIZE));
                     m_calculatedRoadLength = blocks * 5.0;
-
                     m_pendingType = ui::ToolType::STRADA;
                     m_form.configure(BUILDING_RECIPES.at(m_pendingType));
                     m_form.show();

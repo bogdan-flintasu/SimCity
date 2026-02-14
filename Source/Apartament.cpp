@@ -14,7 +14,6 @@ Apartament::Apartament(const int id_, const int camere_, const int locatari_)
 
 }
 
-int Apartament::get_id() const { return id; }
 int Apartament::get_locatari() const { return locatari; }
 
 void Apartament::seteaza_locatari(int x) {

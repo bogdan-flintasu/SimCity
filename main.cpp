@@ -10,19 +10,16 @@ int main() {
     }
     MainMenuPage mainMenu(window, font);
 
+
     while (window.isOpen()) {
-        // --- SFML 3 EVENT LOOP ---
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
 
-            // Trimitem evenimentul concret catre meniu
             mainMenu.handleEvent(*event, window);
         }
-        // -------------------------
 
-        // 2. Verificam ce a ales utilizatorul
         MenuAction action = mainMenu.getAction();
 
         if (action == MenuAction::START_CHALLENGE) {

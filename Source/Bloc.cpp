@@ -8,8 +8,8 @@
 
 #include "Clamp.h"
 
-Bloc::Bloc(const int id, std::string nume_, const double cost_c, const double suprafata, const int etaje, const int numar_locatari)
-    : CladireRezidentiala(id, std::move(nume_), cost_c, 0.0, suprafata, etaje, numar_locatari) {
+Bloc::Bloc(const int id, std::string nume_, const double cost_c, const double suprafata, const int etaje, const int locatari)
+    : CladireRezidentiala(id, std::move(nume_), cost_c, 0.0, suprafata, etaje, locatari) {
     const int nr_ap = std::max(etaje, static_cast<int>(suprafata / 55.0));
 
     for (int i = 0; i < nr_ap; ++i) {

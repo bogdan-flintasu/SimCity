@@ -75,7 +75,7 @@ void ProjectMode::initUI(const sf::RenderWindow& window) {
 
     createBtn("PROIECT INFRASTRUCTURA", 60.f, "Infrastructura");
     createBtn("PROIECT REZIDENTIAL", 130.f, "Rezidential");
-    createBtn("PROIECT PUBLIC", 2000.f, "Public");
+    createBtn("PROIECT PUBLIC", 200.f, "Public");
 
     m_btnSimulate = std::make_shared<ui::Button>(
         sf::Vector2f{centerX - 120.f, centerY - 150.f},
