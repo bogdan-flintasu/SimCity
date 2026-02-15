@@ -235,8 +235,6 @@ bool Oras::implementare_proiect_public(const Proiect& p,
     if (actiune == Amanunte::DE_LA_ZERO) {
         if (!cp) throw ExceptieDateInvalide("implementare_proiect_public: cp null pentru constructie");
         buget_curent -= cost_final;
-        zona_tinta->adauga_cladire_publica(std::move(cp));
-        indice_fericire = clamp01(indice_fericire + delta);
         if (auto* f = dynamic_cast<Fabrica*>(cp.get())) {
             double bonusAutomatizare = 0.0;
             for (const auto& cladireExistenta : zona_tinta->get_cladiri_publice()) {
@@ -246,7 +244,7 @@ bool Oras::implementare_proiect_public(const Proiect& p,
             }
             if (bonusAutomatizare > 0) {
                 f->set_automatizare(0.5 + bonusAutomatizare);
-                std::cout << "[SINERGIE] Fabrica " << f->get_nume()
+                std::cout << "Fabrica " << f->get_nume()
                           << " beneficiaza de un spor de eficienta de " << bonusAutomatizare * 100 << "%\n";
             }
         }
@@ -258,17 +256,19 @@ bool Oras::implementare_proiect_public(const Proiect& p,
                 }
             }
             if (bonusRating > 0) {
-                std::cout << "[SINERGIE] Scoala " << edu->get_nume()
+                std::cout << "Scoala " << edu->get_nume()
                           << " are un rating mai bun datorita parcurilor din jur (+ " << bonusRating << ").\n";
             }
         }
         else if (const auto* sv = dynamic_cast<SpatiuVerde*>(cp.get())) {
             if (const int nrLocuinte = static_cast<int>(zona_tinta->get_cladiri_rezidentiale().size()); nrLocuinte > 3) {
-                std::cout << "[SINERGIE] Parcul " << sv->get_nume()
+                std::cout << "Parcul " << sv->get_nume()
                           << " ofera un bonus de fericire crescut datorita densitatii zonale!\n";
                 indice_fericire = clamp01(indice_fericire + 0.02);
             }
         }
+        zona_tinta->adauga_cladire_publica(std::move(cp));
+        indice_fericire = clamp01(indice_fericire + delta);
     }
 
     else if (actiune == Amanunte::DEMOLARE) {
