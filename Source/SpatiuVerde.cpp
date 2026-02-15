@@ -25,14 +25,6 @@ SpatiuVerde::SpatiuVerde(const int id,
     if (nivel_mentenanta < 0.0 || nivel_mentenanta > 1.0) throw ExceptieDateInvalide("SpatiuVerde: mentenanta in afara [0,1]");
 }
 
-void SpatiuVerde::set_suprafata_mp(const double x) { suprafata_mp = (x < 0.0 ? 0.0 : x); }
-
-void SpatiuVerde::set_nivel_mentenanta(const double x) {
-    if (x < 0.0) nivel_mentenanta = 0.0;
-    else if (x > 1.0) nivel_mentenanta = 1.0;
-    else nivel_mentenanta = x;
-}
-
 double SpatiuVerde::incasari() const {
     return -get_cost_intretinere();
 }
@@ -48,7 +40,6 @@ double SpatiuVerde::impact_fericire(const Amanunte actiune) const {
     score += cap * 0.10;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.050 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.025 * score;
     return -0.060 * (0.6 + 0.4 * score);
 }
 

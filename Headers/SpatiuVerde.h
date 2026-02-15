@@ -22,9 +22,6 @@ public:
                          double suprafata = 0.0,
                          double mentenanta = 0.0);
 
-    void set_suprafata_mp(double x);
-    void set_nivel_mentenanta(double x);
-
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;
 

@@ -13,7 +13,6 @@ int CladirePublica::gen_id() {
     return next_id++;
 }
 
-void CladirePublica::reset_id(const int start) { next_id = start; }
 
 CladirePublica::CladirePublica(const int id, std::string  n, const double cost_c, const double cost_i, const int capacitate, const bool inchiriat_): ID(id == 0 ? gen_id() : id), nume(std::move(n)), cost_construire(cost_c), cost_intretinere(cost_i),
                                                                                                                 capacitate_servicii(capacitate), inchiriat(inchiriat_) {

@@ -28,6 +28,7 @@ const std::string& Proiect::get_nume() const { return nume_proiect; }
 Proiecte Proiect::get_tip() const { return tip; }
 Amanunte Proiect::get_detalii() const { return detalii; }
 double Proiect::get_cost_estimat() const { return cost_estimat; }
+int Proiect::get_id_tinta() const { return id_tinta; }
 
 std::ostream& operator<<(std::ostream& os, const Proiect& p) {
     os << " Proiect: " << p.nume_proiect << "( Cost estimat: " << p.cost_estimat << " RON )\n";

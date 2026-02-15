@@ -8,7 +8,6 @@
 #include "CladireEconomie.h"
 #include <memory>
 #include <string>
-#include <ostream>
 
 class Fabrica : public CladireEconomie {
 private:
@@ -28,7 +27,6 @@ public:
                      double automatizare_ = 0.5,
                      double siguranta_ = 0.5);
 
-    void set_productie_lunara(double v);
     void set_automatizare(double v);
 
     [[nodiscard]] double incasari() const override;

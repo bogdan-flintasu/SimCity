@@ -96,6 +96,13 @@ Proiectul este configurat cu CMake.
 
 Instrucțiuni pentru terminal:
 
+0. Biblioteci necesare pe Linux (presupunem sistem de operare bazat pe Debian, necesită `sudo`)
+```sh
+bash ./scripts/install-sfml-deps.sh
+```
+
+Dacă lipsesc și alte biblioteci, ștergeți folder-ul de build de la pasul 1 și reconfigurați proiectul după ce ați instalat ce lipsea.
+
 1. Pasul de configurare
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -176,5 +183,6 @@ Comanda este aceeași ca la pasul 1 sau 2. Nu merge combinat cu Valgrind.
 ```
 
 ## Resurse
-
+<!-- renovate: datasource=github-tags depName=SFML/SFML versioning=loose -->
+- [SFML](https://github.com/SFML/SFML/tree/3.0.2) (Zlib)
 - adăugați trimiteri **detaliate** către resursele externe care v-au ajutat sau pe care le-ați folosit

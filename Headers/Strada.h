@@ -23,9 +23,6 @@ private:
     static int gen_id();
 
 public:
-
-    static void reset_id(int start = 1);
-
     // Constructor de initializare
     explicit Strada(int id = 0, std::string  nume_ = "", double cost_c = 0.0, double cost_i = 0.0, bool trot = false, bool unic = false, int nr_benzi = 1, double lung = 14.0);
 
@@ -45,6 +42,7 @@ public:
     [[nodiscard]] bool get_sens_unic() const;
     [[nodiscard]] double get_lungime() const;
     [[nodiscard]] int get_numar_benzi() const;
+
 
     // operator<<
     friend std::ostream& operator<<(std::ostream& os, const Strada& s);

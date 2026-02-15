@@ -36,15 +36,6 @@ CladireServicii::CladireServicii(const int id,
     if (rata_rezolvare_cazuri < 0.0 || rata_rezolvare_cazuri > 1.0) throw ExceptieDateInvalide("CladireServicii: rata_rezolvare in afara [0,1]");
 }
 
-void CladireServicii::set_dotare(const double x) { dotare = (x < 0.0 ? 0.0 : x); }
-void CladireServicii::set_timp_asteptare(const double x) { timp_asteptare = (x < 0.0 ? 0.0 : x); }
-void CladireServicii::set_stoc_curent(const double x) { stoc_curent = (x < 0.0 ? 0.0 : x); }
-void CladireServicii::set_rata_rezolvare_cazuri(const double x) {
-    if (x < 0.0) rata_rezolvare_cazuri = 0.0;
-    else if (x > 1.0) rata_rezolvare_cazuri = 1.0;
-    else rata_rezolvare_cazuri = x;
-}
-
 double CladireServicii::incasari() const {
     return 0.0;
 }
@@ -65,7 +56,6 @@ double CladireServicii::impact_fericire(const Amanunte actiune) const {
 
     double extra = 0.0;
     if (actiune == Amanunte::DE_LA_ZERO)   extra = +0.035 * score;
-    else if (actiune == Amanunte::IMBUNATATIRE) extra = +0.020 * score;
     else extra = -0.045 * (0.6 + 0.4 * score);
 
     return base_admin + extra;

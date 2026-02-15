@@ -31,9 +31,6 @@ public:
                              int locuri_parcare_ = 0,
                              double nivel_servicii_ = 0.5);
 
-    void set_trafic_zilnic(double v);
-    void set_locuri_parcare(int v);
-
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;
 

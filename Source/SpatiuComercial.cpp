@@ -26,10 +26,6 @@ SpatiuComercial::SpatiuComercial(const int id,
       locuri_parcare(locuri_parcare_ < 0 ? 0 : locuri_parcare_),
       nivel_servicii(clamp01(nivel_servicii_)) {}
 
-void SpatiuComercial::set_trafic_zilnic(const double v) { trafic_zilnic = (v < 0 ? 0.0 : v); }
-void SpatiuComercial::set_locuri_parcare(const int v) { locuri_parcare = (v < 0 ? 0 : v); }
-
-
 double SpatiuComercial::eficienta_trafic() const {
     const double t = trafic_zilnic < 0 ? 0.0 : trafic_zilnic;
     const double p = locuri_parcare < 0 ? 0.0 : static_cast<double>(locuri_parcare);
@@ -68,7 +64,6 @@ double SpatiuComercial::impact_fericire(const Amanunte actiune) const {
     score += 0.25 * eff;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.050 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.025 * score;
     return -0.060 * (0.6 + 0.4 * score);
 }
 

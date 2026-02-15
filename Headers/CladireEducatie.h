@@ -31,14 +31,8 @@ public:
                              double abs = 0.0,
                              double rating = 0.0);
 
-    void adauga_salariat(const Salariat& s);
-
     [[nodiscard]] int get_nr_salariati() const;
     [[nodiscard]] double eficienta_cladire() const;
-
-    void set_nivel_educatie(int x);
-    void set_rata_promovare(double x);
-    void set_absente(double x);
 
     [[nodiscard]] double incasari() const override;
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;

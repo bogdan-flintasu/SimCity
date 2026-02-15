@@ -24,7 +24,6 @@ Fabrica::Fabrica(const int id,
       automatizare(clamp01(automatizare_)),
       siguranta(clamp01(siguranta_)) {}
 
-void Fabrica::set_productie_lunara(const double v) { productie_lunara = (v < 0 ? 0.0 : v); }
 void Fabrica::set_automatizare(const double v) { automatizare = clamp01(v); }
 
 double Fabrica::incasari() const {
@@ -53,7 +52,6 @@ double Fabrica::impact_fericire(const Amanunte actiune) const {
     score += 0.15 * cap;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.030 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.015 * score;
     return -0.070 * (0.6 + 0.4 * score);
 }
 

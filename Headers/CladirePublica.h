@@ -21,7 +21,6 @@ protected:
     bool inchiriat{false};
     static int next_id;
     static int gen_id();
-    static void reset_id(int start = 1);
 
 public:
     explicit CladirePublica(int id = 0, std::string  n = "", double cost_c = 0, double cost_i = 0, int capacitate = 0, bool inchiriat_ = false);

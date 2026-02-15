@@ -34,11 +34,6 @@ CladireEducatie::CladireEducatie(const int id,
     if (rating_elevi < 0.0) throw ExceptieDateInvalide("CladireEducatie: rating negativ");
 }
 
-void CladireEducatie::adauga_salariat(const Salariat& s) {
-    salariati.push_back(s);
-    cost_intretinere += s.salariu;
-}
-
 int CladireEducatie::get_nr_salariati() const {
     return static_cast<int>(salariati.size());
 }
@@ -48,20 +43,6 @@ double CladireEducatie::eficienta_cladire() const {
     double suma = 0.0;
     for (const auto& s : salariati) suma += s.eficienta;
     return suma / static_cast<double>(salariati.size());
-}
-
-void CladireEducatie::set_nivel_educatie(const int x) { nivel_educatie = (x < 0 ? 0 : x); }
-
-void CladireEducatie::set_rata_promovare(const double x) {
-    if (x < 0.0) rata_promovare = 0.0;
-    else if (x > 1.0) rata_promovare = 1.0;
-    else rata_promovare = x;
-}
-
-void CladireEducatie::set_absente(const double x) {
-    if (x < 0.0) rata_absenta = 0.0;
-    else if (x > 1.0) rata_absenta = 1.0;
-    else rata_absenta = x;
 }
 
 double CladireEducatie::incasari() const {
@@ -83,7 +64,6 @@ double CladireEducatie::impact_fericire(const Amanunte actiune) const {
     score += rating * 0.15;
 
     if (actiune == Amanunte::DE_LA_ZERO)   return +0.030 * score;
-    if (actiune == Amanunte::IMBUNATATIRE) return +0.018 * score;
     return -0.028 * (0.6 + 0.4 * score);
 }
 
