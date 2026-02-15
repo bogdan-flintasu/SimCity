@@ -22,7 +22,6 @@ protected:
     int numar_locuitori;
     static int next_id;
     static int gen_id();
-    static void reset_id(int start = 1);
 
 public:
 

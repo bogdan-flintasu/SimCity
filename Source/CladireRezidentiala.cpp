@@ -12,7 +12,6 @@ int CladireRezidentiala::gen_id() {
     return next_id++;
 }
 
-void CladireRezidentiala::reset_id(int start) { next_id = start; }
 
 
 CladireRezidentiala::CladireRezidentiala(const int id, std::string nume_, const double cost_c, const double cost_i, const double suprafata, const int etaje, const int locatari) : ID(id == 0 ? gen_id() : id), nume(std::move(nume_)), cost_construire(cost_c),
