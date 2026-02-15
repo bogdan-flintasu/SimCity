@@ -78,8 +78,8 @@ public:
     [[maybe_unused]] void simulare_luna();
 
     void reset();
-    void incarca_preset_challenge();
-    [[nodiscard]] bool sterge_zona(const std::string& nume);
+    [[maybe_unused]] void incarca_preset_challenge();
+    [[nodiscard]] [[maybe_unused]] bool sterge_zona(const std::string& nume);
 
     [[nodiscard]] std::string genereaza_raport_final() const;
 

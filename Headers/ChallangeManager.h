@@ -26,9 +26,11 @@ public:
         return instance;
     }
 
-    [[maybe_unused]] static std::string getTitle() { return "SCENARIU: SALVEAZA ORASUL!"; }
+    // cppcheck-suppress unusedFunction
+    static std::string getTitle() { return "SCENARIU: SALVEAZA ORASUL!"; }
 
-    [[maybe_unused]] static std::string getDescription() {
+    // cppcheck-suppress unusedFunction
+    static std::string getDescription() {
         return "Esti primar de criza.\n\n"
                "CONDITII:\n"
                "1. Timp limita: 24 luni\n"
