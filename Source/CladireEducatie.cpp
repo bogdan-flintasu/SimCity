@@ -34,11 +34,6 @@ CladireEducatie::CladireEducatie(const int id,
     if (rating_elevi < 0.0) throw ExceptieDateInvalide("CladireEducatie: rating negativ");
 }
 
-void CladireEducatie::adauga_salariat(const Salariat& s) {
-    salariati.push_back(s);
-    cost_intretinere += s.salariu;
-}
-
 int CladireEducatie::get_nr_salariati() const {
     return static_cast<int>(salariati.size());
 }

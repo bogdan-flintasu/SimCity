@@ -29,23 +29,21 @@ private:
 public:
     CladireBuilder() = default;
 
-    // Metode de tip Builder (Method Chaining)
-    CladireBuilder& setNume(std::string n);
-    CladireBuilder& setCost(double c);
-    CladireBuilder& setSuprafata(double s);
-    CladireBuilder& setCapacitate(int cap);
-    CladireBuilder& setInchiriat(bool inc);
-    CladireBuilder& setRating(double r);
-    CladireBuilder& setPoluare(double p);
-    CladireBuilder& setMentenanta(double m);
+    [[maybe_unused]] CladireBuilder& setNume(std::string n);
+    [[maybe_unused]] CladireBuilder& setCost(double c);
+    [[maybe_unused]] CladireBuilder& setSuprafata(double s);
+    [[maybe_unused]] CladireBuilder& setCapacitate(int cap);
+    [[maybe_unused]] CladireBuilder& setInchiriat(bool inc);
+    [[maybe_unused]] CladireBuilder& setRating(double r);
+    [[maybe_unused]] CladireBuilder& setPoluare(double p);
+    [[maybe_unused]] CladireBuilder& setMentenanta(double m);
 
-    // Functii de asamblare finala
-    std::unique_ptr<Fabrica> buildFabrica();
-    std::unique_ptr<CladireEducatie> buildScoala();
-    std::unique_ptr<CladireServicii> buildServicii();
-    std::unique_ptr<SpatiuComercial> buildComercial();
-    std::unique_ptr<SpatiuVerde> buildSpatiuVerde();
-    std::unique_ptr<CladireAdministrativa> buildAdmin();
+    [[maybe_unused]] std::unique_ptr<Fabrica> buildFabrica();
+    [[maybe_unused]] std::unique_ptr<CladireEducatie> buildScoala();
+    [[maybe_unused]] std::unique_ptr<CladireServicii> buildServicii();
+    [[maybe_unused]] std::unique_ptr<SpatiuComercial> buildComercial();
+    [[maybe_unused]] std::unique_ptr<SpatiuVerde> buildSpatiuVerde();
+    [[maybe_unused]] std::unique_ptr<CladireAdministrativa> buildAdmin();
 };
 
 #endif

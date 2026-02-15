@@ -31,8 +31,6 @@ public:
                              double abs = 0.0,
                              double rating = 0.0);
 
-    void adauga_salariat(const Salariat& s);
-
     [[nodiscard]] int get_nr_salariati() const;
     [[nodiscard]] double eficienta_cladire() const;
 

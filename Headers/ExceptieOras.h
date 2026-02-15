@@ -22,9 +22,8 @@ public:
         : ExceptieOras("Fonduri insuficiente pentru finalizarea proiectului."),
           m_bugetActual(buget), m_costNecesar(cost) {}
 
-    [[nodiscard]] double getLipsa() const { return m_costNecesar - m_bugetActual; }
-    [[nodiscard]] double getBuget() const { return m_bugetActual; }
-    [[nodiscard]] double getCost() const { return m_costNecesar; }
+    [[nodiscard]] [[maybe_unused]] double getLipsa() const { return m_costNecesar - m_bugetActual; }
+    [[nodiscard]] [[maybe_unused]] double getCost() const { return m_costNecesar; }
 };
 
 class ExceptieIDInexistent : public ExceptieOras {
@@ -35,7 +34,7 @@ public:
         : ExceptieOras("ID-ul solicitat nu a fost gasit in baza de date a orasului."),
           m_idProblema(id) {}
 
-    [[nodiscard]] int getID() const { return m_idProblema; }
+    [[nodiscard]] [[maybe_unused]]int getID() const { return m_idProblema; }
 };
 
 class ExceptieZonaInexistenta : public ExceptieOras {
@@ -45,7 +44,7 @@ public:
     explicit ExceptieZonaInexistenta(std::string nume)
         : ExceptieOras("Zona specificata nu exista."), m_numeZona(std::move(nume)) {}
 
-    [[nodiscard]] const std::string& getNumeZona() const { return m_numeZona; }
+    [[nodiscard]] [[maybe_unused]] const std::string& getNumeZona() const { return m_numeZona; }
 };
 
 class ExceptieDateInvalide : public ExceptieOras {

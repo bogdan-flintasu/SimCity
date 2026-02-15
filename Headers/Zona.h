@@ -31,15 +31,15 @@ public:
 
     ~Zona();
 
-    Strada* get_strada_dupa_id(int id);
-    std::unique_ptr<CladireRezidentiala> get_rezidentiala_dupa_id(int id);
-    std::unique_ptr<CladirePublica> get_publica_dupa_id(int id);
+    [[maybe_unused]] Strada* get_strada_dupa_id(int id);
+    [[maybe_unused]] std::unique_ptr<CladireRezidentiala> get_rezidentiala_dupa_id(int id);
+    [[maybe_unused]] std::unique_ptr<CladirePublica> get_publica_dupa_id(int id);
 
-    [[nodiscard]] int get_ultimul_id_strada() const;
-    [[nodiscard]] int get_ultimul_id_rezidentiala() const;
-    [[nodiscard]] int get_ultimul_id_publica() const;
+    [[nodiscard]] [[maybe_unused]] int get_ultimul_id_strada() const;
+    [[nodiscard]] [[maybe_unused]] int get_ultimul_id_rezidentiala() const;
+    [[nodiscard]] [[maybe_unused]] int get_ultimul_id_publica() const;
 
-    [[nodiscard]] const std::vector<Strada>& get_strazi() const;
+    [[nodiscard]] [[maybe_unused]] const std::vector<Strada>& get_strazi() const;
     [[nodiscard]] const std::vector<std::unique_ptr<CladireRezidentiala>>& get_cladiri_rezidentiale() const;
     [[nodiscard]] const std::vector<std::unique_ptr<CladirePublica>>& get_cladiri_publice() const;
 

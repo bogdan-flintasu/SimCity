@@ -12,10 +12,6 @@ int Strada::gen_id() {
     return next_id++;
 }
 
-void Strada::reset_id(int start) {
-    next_id = start;
-}
-
 Strada::Strada(int id, std::string  nume_, double cost_c, double cost_i, bool trot, bool unic, int nr_benzi, double lung) : ID(id == 0 ? gen_id() : id), nume(std::move(nume_)), cost_construire(cost_c), cost_intretinere(cost_i),
                                                                                                             trotuar(trot), sens_unic(unic), numar_benzi(nr_benzi), lungime(lung) {std::cout << "[DEBUG STRADA] S-a creat obiectul '" << nume << "' cu ID final: " << this->ID << "\n";}
 

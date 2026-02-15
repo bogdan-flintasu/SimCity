@@ -16,11 +16,6 @@ public:
         istoric.push_back({moment, valoare});
     }
 
-    T get_ultima_valoare() const {
-        if (istoric.empty()) return T{};
-        return istoric.back().second;
-    }
-
     const std::vector<std::pair<U, T>>& get_istoric() const {
         return istoric;
     }

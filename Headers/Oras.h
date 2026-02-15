@@ -46,36 +46,36 @@ public:
     friend void swap(Oras& a, Oras& b) noexcept;
 
     [[nodiscard]] double get_buget() const;
-    [[nodiscard]] int get_populatie() const;
+    [[nodiscard]] [[maybe_unused]] int get_populatie() const;
     [[nodiscard]] double get_fericire() const;
-    [[nodiscard]] bool get_proiect_implementat() const;
+    [[nodiscard]] [[maybe_unused]] bool get_proiect_implementat() const;
     [[nodiscard]] int get_luna_curenta() const;
-    [[nodiscard]] int get_luni_excelenta() const;
-    [[nodiscard]] int get_stare_joc() const;
+    [[nodiscard]] [[maybe_unused]] int get_luni_excelenta() const;
+    [[nodiscard]] [[maybe_unused]] int get_stare_joc() const;
 
-    void set_proiect_implementat();
-    void set_nume(const std::string& nume);
+    [[maybe_unused]] void set_proiect_implementat();
+    [[maybe_unused]] void set_nume(const std::string& nume);
     void set_stare_joc(int stare);
 
-    void adauga_zona(Zona z);
+    [[maybe_unused]] void adauga_zona(Zona z);
 
     [[nodiscard]] double calcul_cost_intretinere_total() const;
     [[nodiscard]] double calcul_incasari_totale() const;
     [[nodiscard]] int calcul_numar_total_masini() const;
 
-    bool implementare_proiect_stradal(const Proiect& p,
+    [[maybe_unused]] bool implementare_proiect_stradal(const Proiect& p,
                                                     const Strada& s,
                                                     const std::string& nume_zona_proiect);
 
-    bool implementare_proiect_rezidential(const Proiect& p,
+    [[maybe_unused]] bool implementare_proiect_rezidential(const Proiect& p,
                                                         std::unique_ptr<CladireRezidentiala> cr,
                                                         const std::string& nume_zona_proiect);
 
-    bool implementare_proiect_public(const Proiect& p,
+    [[maybe_unused]] bool implementare_proiect_public(const Proiect& p,
                                                    std::unique_ptr<CladirePublica> cp,
                                                    const std::string& nume_zona_proiect);
 
-    void simulare_luna();
+    [[maybe_unused]] void simulare_luna();
 
     void reset();
     void incarca_preset_challenge();

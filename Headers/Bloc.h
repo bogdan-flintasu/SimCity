@@ -30,7 +30,7 @@ public:
     [[nodiscard]] double impact_fericire(Amanunte actiune) const override;
     [[nodiscard]] double incasari_lunare() const override;
 
-    void calculeaza_cost_intretinere(double cost_fix_bloc,
+    [[maybe_unused]] void calculeaza_cost_intretinere(double cost_fix_bloc,
                                      double cost_pe_apartament,
                                      double cost_pe_mp);
 
